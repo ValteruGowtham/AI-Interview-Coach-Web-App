@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Interview Simulation - AI Interview Coach{% endblock %}
+
+{% block content %}
+<div class="simulate-container">
+    {% if not asked %}
+    <div class="page-header">
+        <h1>Start Your Interview</h1>
+        <p class="page-subtitle">Choose your role and begin practicing with our AI interviewer</p>
+    </div>
+
+    <div class="interview-setup">
+        <div class="setup-card">
+            <div class="setup-header">
+                <div class="setup-icon">🎯</div>
+                <h2>Interview Setup</h2>
+                <p>Tell us about the role you're interviewing for to get personalized questions</p>
+            </div>
+
+            <form method="post" class="setup-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="role">Job Title / Role</label>
+                    <input 
+                        type="text" 
+                        name="role" 
+                        id="role" 
+                        placeholder="e.g., Software Engineer, Data Scientist, Product Manager" 
+                        required
+                        class="form-input"
+                    >
+                    <small class="form-help">Be specific about the role to get more relevant questions</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="interview-type">Interview Type</label>
+                    <select name="interview_type" id="interview-type" class="form-select">
+                        <option value="technical">Technical Interview</option>
+                        <option value="behavioral">Behavioral Interview</option>
+                        <option value="system-design">System Design</option>
+                        <option value="mixed">Mixed (Technical + Behavioral)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience-level">Experience Level</label>
+                    <select name="experience_level" id="experience-level" class="form-select">
+                        <option value="entry">Entry Level (0-2 years)</option>
+                        <option value="mid">Mid Level (3-5 years)</option>
+                        <option value="senior">Senior Level (5+ years)</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large">Start Interview</button>
+                    <a href="{% url 'interview:home' %}" class="btn btn-outline">Back to Practice</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="interview-tips">
+        <h2>Before You Start</h2>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <h4>Find a Quiet Space</h4>
+                <p>Ensure you're in a quiet environment where you can focus</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Have Your Resume Ready</h4>
+                <p>Keep your resume handy for reference during the interview</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Think About Examples</h4>
+                <p>Prepare specific examples from your experience</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Take Your Time</h4>
+                <p>Don't rush your answers - think before you respond</p>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="interview-session">
+        <div class="interview-header">
+            <h1>Interview in Progress</h1>
+            <div class="interview-info">
+                <span class="role-badge">{{ role }}</span>
+                <span class="timer">00:00</span>
+            </div>
+        </div>
+
+        <div class="interview-content">
+            <div class="question-section">
+                <div class="question-card">
+                    <h3>Question 1</h3>
+                    <p class="question-text">Tell me about a challenging project you worked on and how you overcame obstacles.</p>
+                    
+                    <div class="response-area">
+                        <textarea 
+                            placeholder="Type your response here..." 
+                            class="response-input"
+                            rows="6"
+                        ></textarea>
+                        
+                        <div class="response-actions">
+                            <button class="btn btn-primary">Submit Answer</button>
+                            <button class="btn btn-outline">Skip Question</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interview-sidebar">
+                <div class="progress-card">
+                    <h4>Progress</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 20%"></div>
+                    </div>
+                    <span class="progress-text">1 of 5 questions</span>
+                </div>
+
+                <div class="feedback-card">
+                    <h4>AI Feedback</h4>
+                    <div class="feedback-content">
+                        <p>Your response will be analyzed here...</p>
+                    </div>
+                </div>
+
+                <div class="interview-controls">
+                    <button class="btn btn-outline">Pause Interview</button>
+                    <button class="btn btn-secondary">End Interview</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

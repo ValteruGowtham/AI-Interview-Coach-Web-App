@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Interview Practice - AI Interview Coach{% endblock %}
+
+{% block content %}
+<div class="interview-container">
+    <div class="page-header">
+        <h1>Interview Practice</h1>
+        <p class="page-subtitle">Master your interview skills with AI-powered mock interviews</p>
+    </div>
+
+    <div class="interview-features">
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Role-Based Practice</h3>
+                <p>Practice interviews tailored to your target role and industry</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI-Powered Feedback</h3>
+                <p>Get instant feedback on your responses and communication style</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Performance Analytics</h3>
+                <p>Track your progress and identify areas for improvement</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <h3>Flexible Timing</h3>
+                <p>Practice at your own pace with customizable session lengths</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="interview-actions">
+        <div class="action-section">
+            <h2>Ready to Practice?</h2>
+            <p>Choose your interview type and start practicing with our AI interviewer</p>
+            
+            <div class="interview-types">
+                <div class="interview-type-card">
+                    <h3>Technical Interview</h3>
+                    <p>Practice coding problems and technical questions</p>
+                    <a href="{% url 'interview:simulate' %}" class="btn btn-primary">Start Technical</a>
+                </div>
+                
+                <div class="interview-type-card">
+                    <h3>Behavioral Interview</h3>
+                    <p>Practice common behavioral and situational questions</p>
+                    <a href="{% url 'interview:simulate' %}" class="btn btn-secondary">Start Behavioral</a>
+                </div>
+                
+                <div class="interview-type-card">
+                    <h3>System Design</h3>
+                    <p>Practice system design and architecture questions</p>
+                    <a href="{% url 'interview:simulate' %}" class="btn btn-outline">Start System Design</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="interview-tips">
+        <h2>Interview Tips</h2>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <h4>Prepare Your Stories</h4>
+                <p>Have 2-3 specific examples ready for common behavioral questions</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Practice Out Loud</h4>
+                <p>Speaking your answers helps you organize your thoughts better</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Research the Company</h4>
+                <p>Understand the company's culture, values, and recent news</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Ask Questions</h4>
+                <p>Prepare thoughtful questions to ask your interviewer</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

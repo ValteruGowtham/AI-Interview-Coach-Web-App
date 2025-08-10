@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Upload Resume - AI Interview Coach{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+    <div class="page-header">
+        <h1>Upload Your Resume</h1>
+        <p class="page-subtitle">Upload your resume to get AI-powered analysis and improvement suggestions</p>
+    </div>
+
+    <div class="upload-form-section">
+        <div class="upload-card">
+            <div class="upload-header">
+                <div class="upload-icon">📄</div>
+                <h2>Resume Upload</h2>
+                <p>Supported formats: PDF, DOC, DOCX (Max 10MB)</p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="upload-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="{{ form.title.id_for_label }}">Resume Title</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                        <div class="error-message">{{ form.title.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-help">Give your resume a descriptive name (e.g., "Software Engineer Resume 2024")</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.file.id_for_label }}">Resume File</label>
+                    <div class="file-upload-area">
+                        <input type="file" name="{{ form.file.name }}" id="{{ form.file.id_for_label }}" accept=".pdf,.doc,.docx" required>
+                        <div class="file-upload-placeholder">
+                            <div class="upload-icon-large">📄</div>
+                            <p>Click to select file or drag and drop</p>
+                            <small>PDF, DOC, or DOCX files only</small>
+                        </div>
+                    </div>
+                    {% if form.file.errors %}
+                        <div class="error-message">{{ form.file.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large">Upload & Analyze</button>
+                    <a href="{% url 'resume:home' %}" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="upload-tips">
+        <h2>Upload Tips</h2>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <h4>Use PDF Format</h4>
+                <p>PDF files maintain formatting across different systems</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Keep File Size Small</h4>
+                <p>Compress images if your resume includes them</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Use Clear Naming</h4>
+                <p>Include your name and the year in the filename</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Check Content</h4>
+                <p>Ensure all text is readable and properly formatted</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

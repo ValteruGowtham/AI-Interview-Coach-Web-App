@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Learning Roadmap - AI Interview Coach{% endblock %}
+
+{% block content %}
+<div class="roadmap-container">
+    <div class="page-header">
+        <h1>Learning Roadmap</h1>
+        <p class="page-subtitle">Follow personalized learning paths to master the skills you need for your dream job</p>
+    </div>
+
+    <div class="roadmap-overview">
+        <div class="overview-card">
+            <h2>Your Learning Journey</h2>
+            <p>Track your progress through structured learning modules designed for your career goals</p>
+            <div class="progress-summary">
+                <div class="progress-item">
+                    <span class="progress-label">Completed Modules</span>
+                    <span class="progress-value">0/{{ roadmap|length }}</span>
+                </div>
+                <div class="progress-item">
+                    <span class="progress-label">Total Weeks</span>
+                    <span class="progress-value">{{ roadmap|length }} weeks</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="roadmap-content">
+        <h2>Learning Path</h2>
+        <div class="roadmap-timeline">
+            {% for item in roadmap %}
+            <div class="roadmap-item">
+                <div class="roadmap-marker">
+                    <div class="marker-number">{{ forloop.counter }}</div>
+                </div>
+                <div class="roadmap-content">
+                    <div class="roadmap-header">
+                        <h3>{{ item.title }}</h3>
+                        <span class="duration">{{ item.weeks }} weeks</span>
+                    </div>
+                    <div class="roadmap-resources">
+                        <h4>Resources:</h4>
+                        <div class="resource-tags">
+                            {% for resource in item.resources %}
+                            <span class="resource-tag">{{ resource }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="roadmap-actions">
+                        <button class="btn btn-primary">Start Module</button>
+                        <button class="btn btn-outline">View Details</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="roadmap-features">
+        <h2>Why Choose Our Roadmap?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Personalized Paths</h3>
+                <p>Learning roadmaps tailored to your experience level and career goals</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Curated Resources</h3>
+                <p>Hand-picked resources from industry experts and top platforms</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Progress Tracking</h3>
+                <p>Monitor your learning progress with detailed analytics</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Adaptive Learning</h3>
+                <p>Roadmaps that adapt based on your performance and feedback</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="roadmap-tips">
+        <h2>Learning Tips</h2>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <h4>Set Daily Goals</h4>
+                <p>Commit to spending at least 1-2 hours daily on learning</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Practice Regularly</h4>
+                <p>Apply what you learn through hands-on projects and exercises</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Join Communities</h4>
+                <p>Connect with others learning similar skills for motivation</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Review & Reflect</h4>
+                <p>Regularly review your progress and adjust your learning plan</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

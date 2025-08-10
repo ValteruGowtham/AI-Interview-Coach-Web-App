@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - AI Interview Coach{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="welcome-section">
+        <h1>Welcome, {{ user.username }}!</h1>
+        <p class="welcome-subtitle">Ready to ace your next interview? Let's get started!</p>
+    </div>
+
+    <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-cards">
+            <div class="action-card">
+                <div class="card-icon">📝</div>
+                <h3>Resume Analysis</h3>
+                <p>Upload and analyze your resume with AI insights</p>
+                <a href="{% url 'resume:home' %}" class="btn btn-secondary">Get Started</a>
+            </div>
+            
+            <div class="action-card">
+                <div class="card-icon">🎯</div>
+                <h3>Interview Practice</h3>
+                <p>Practice with AI-powered mock interviews</p>
+                <a href="{% url 'interview:home' %}" class="btn btn-secondary">Start Practice</a>
+            </div>
+            
+            <div class="action-card">
+                <div class="card-icon">🗺️</div>
+                <h3>Learning Roadmap</h3>
+                <p>Follow personalized learning paths</p>
+                <a href="{% url 'roadmap:home' %}" class="btn btn-secondary">View Roadmap</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="progress-section">
+        <h2>Your Progress</h2>
+        <div class="progress-cards">
+            <div class="progress-card">
+                <h4>Resume Score</h4>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%"></div>
+                </div>
+                <span class="progress-text">75%</span>
+            </div>
+            
+            <div class="progress-card">
+                <h4>Interview Skills</h4>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%"></div>
+                </div>
+                <span class="progress-text">60%</span>
+            </div>
+            
+            <div class="progress-card">
+                <h4>Learning Progress</h4>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 45%"></div>
+                </div>
+                <span class="progress-text">45%</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="recent-activity">
+        <h2>Recent Activity</h2>
+        <div class="activity-list">
+            <div class="activity-item">
+                <span class="activity-icon">📊</span>
+                <div class="activity-content">
+                    <h4>Resume Analysis Completed</h4>
+                    <p>Your resume was analyzed and scored 75/100</p>
+                    <span class="activity-time">2 hours ago</span>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <span class="activity-icon">🎤</span>
+                <div class="activity-content">
+                    <h4>Mock Interview Completed</h4>
+                    <p>Completed a 15-minute technical interview session</p>
+                    <span class="activity-time">1 day ago</span>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <span class="activity-icon">📚</span>
+                <div class="activity-content">
+                    <h4>Learning Module Started</h4>
+                    <p>Started "Advanced Data Structures" module</p>
+                    <span class="activity-time">3 days ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

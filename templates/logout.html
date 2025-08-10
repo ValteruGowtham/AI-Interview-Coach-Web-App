@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Logged Out - AI Interview Coach{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="logout-success">
+            <div class="success-icon">✅</div>
+            <h2>Successfully Logged Out</h2>
+            <p class="logout-message">You have been successfully logged out of your account.</p>
+            
+            <div class="logout-actions">
+                <a href="{% url 'login' %}" class="btn btn-primary">Sign In Again</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary">Create New Account</a>
+            </div>
+            
+            <div class="logout-footer">
+                <p>Thank you for using AI Interview Coach!</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

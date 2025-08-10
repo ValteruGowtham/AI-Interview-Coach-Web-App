@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Interview Coach - Your Path to Interview Success{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1>Master Your Interviews with AI</h1>
+        <p class="hero-subtitle">Get personalized interview preparation, resume analysis, and learning roadmaps powered by artificial intelligence.</p>
+        
+        <div class="hero-actions">
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="btn btn-primary btn-large">Go to Dashboard</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn btn-primary btn-large">Get Started Free</a>
+                <a href="{% url 'login' %}" class="btn btn-secondary btn-large">Sign In</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="hero-image">
+        <div class="hero-illustration">🤖</div>
+    </div>
+</div>
+
+<div class="features-section">
+    <h2>Why Choose AI Interview Coach?</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>AI-Powered Practice</h3>
+            <p>Practice with intelligent mock interviews that adapt to your skill level and provide real-time feedback.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Smart Resume Analysis</h3>
+            <p>Get detailed insights and suggestions to improve your resume with AI-powered analysis.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🗺️</div>
+            <h3>Personalized Learning</h3>
+            <p>Follow customized learning roadmaps based on your career goals and current skill level.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3>Progress Tracking</h3>
+            <p>Monitor your improvement with detailed analytics and performance metrics.</p>
+        </div>
+    </div>
+</div>
+
+<div class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps-container">
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>Create Account</h3>
+            <p>Sign up and tell us about your career goals and experience level.</p>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>Upload Resume</h3>
+            <p>Upload your resume for AI-powered analysis and improvement suggestions.</p>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>Practice Interviews</h3>
+            <p>Engage in realistic mock interviews with AI that adapts to your responses.</p>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">4</div>
+            <h3>Track Progress</h3>
+            <p>Monitor your improvement and follow personalized learning paths.</p>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section">
+    <div class="cta-content">
+        <h2>Ready to Ace Your Next Interview?</h2>
+        <p>Join thousands of professionals who have improved their interview skills with AI Interview Coach.</p>
+        
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="btn btn-primary btn-large">Continue Learning</a>
+        {% else %}
+            <a href="{% url 'register' %}" class="btn btn-primary btn-large">Start Free Trial</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Interview Coach{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="{% url 'home' %}">
+                    <span class="logo-icon">🤖</span>
+                    <span class="logo-text">AI Interview Coach</span>
+                </a>
+            </div>
+            
+            <nav class="main-nav">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+                    <a href="{% url 'interview:home' %}" class="nav-link">Interview</a>
+                    <a href="{% url 'resume:home' %}" class="nav-link">Resume</a>
+                    <a href="{% url 'roadmap:home' %}" class="nav-link">Roadmap</a>
+                {% else %}
+                    <a href="{% url 'home' %}" class="nav-link">Home</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="#how-it-works" class="nav-link">How It Works</a>
+                {% endif %}
+            </nav>
+            
+            <div class="auth-section">
+                {% if user.is_authenticated %}
+                    <div class="user-menu">
+                        <span class="username">{{ user.username }}</span>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'profile' %}" class="dropdown-item">Profile</a>
+                            <a href="{% url 'logout' %}" class="dropdown-item">Sign Out</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-outline">Sign In</a>
+                    <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="message message-{{ message.tags }}">
+            {{ message }}
+            <button class="message-close">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AI Interview Coach</h3>
+                    <p>Your AI-powered companion for interview success</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li><a href="{% url 'register' %}">Register</a></li>
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul>
+                        <li><a href="{% url 'interview:home' %}">Mock Interviews</a></li>
+                        <li><a href="{% url 'resume:home' %}">Resume Analysis</a></li>
+                        <li><a href="{% url 'roadmap:home' %}">Learning Roadmaps</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AI Interview Coach. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

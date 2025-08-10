@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Resume Analysis - AI Interview Coach{% endblock %}
+
+{% block content %}
+<div class="resume-container">
+    <div class="page-header">
+        <h1>Resume Analysis</h1>
+        <p class="page-subtitle">Get AI-powered insights to improve your resume and stand out to employers</p>
+    </div>
+
+    <div class="resume-actions">
+        <div class="upload-section">
+            <h2>Upload Your Resume</h2>
+            <p>Upload your resume to get personalized feedback and improvement suggestions</p>
+            <a href="{% url 'resume:upload_resume' %}" class="btn btn-primary btn-large">Upload Resume</a>
+        </div>
+    </div>
+
+    <div class="resume-list">
+        <h2>Your Resumes</h2>
+        {% if resumes %}
+            <div class="resume-grid">
+                {% for resume in resumes %}
+                <div class="resume-card">
+                    <div class="resume-header">
+                        <div class="resume-icon">📄</div>
+                        <div class="resume-info">
+                            <h3>{{ resume.title|default:resume.file.name }}</h3>
+                            <p class="upload-date">Uploaded {{ resume.uploaded_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="resume-actions">
+                        <a href="{{ resume.file.url }}" class="btn btn-outline" target="_blank">View</a>
+                        <button class="btn btn-secondary">Analyze</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📄</div>
+                <h3>No resumes uploaded yet</h3>
+                <p>Upload your first resume to get started with AI-powered analysis</p>
+                <a href="{% url 'resume:upload_resume' %}" class="btn btn-primary">Upload Your First Resume</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="resume-features">
+        <h2>What You'll Get</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>ATS Optimization</h3>
+                <p>Ensure your resume passes through Applicant Tracking Systems</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Keyword Analysis</h3>
+                <p>Identify missing keywords relevant to your target role</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Content Suggestions</h3>
+                <p>Get specific recommendations to improve your content</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Score Tracking</h3>
+                <p>Track your resume's improvement over time</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="resume-tips">
+        <h2>Resume Best Practices</h2>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <h4>Keep It Concise</h4>
+                <p>Limit your resume to 1-2 pages for most roles</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Use Action Verbs</h4>
+                <p>Start bullet points with strong action verbs</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Quantify Achievements</h4>
+                <p>Include specific numbers and metrics when possible</p>
+            </div>
+            
+            <div class="tip-card">
+                <h4>Tailor to Job</h4>
+                <p>Customize your resume for each specific role</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
