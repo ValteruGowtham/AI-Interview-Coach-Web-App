@@ -20,6 +20,10 @@ venv/
 env/
 ENV/
 
+# Static files
+staticfiles/
+staticfiles_build/
+
 # IDE
 .vscode/
 .idea/
@@ -33,3 +37,7 @@ Thumbs.db
 # Documentation (optional - can be committed if needed)
 DEPLOYMENT_STATUS.md
 TEMPLATE_REDESIGN.md
+
+# Vercel
+.vercel
+
