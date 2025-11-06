@@ -32,11 +32,3 @@ staticfiles/
 # OS
 .DS_Store
 Thumbs.db
-
-# Documentation (optional - can be committed if needed)
-DEPLOYMENT_STATUS.md
-TEMPLATE_REDESIGN.md
-
-# Vercel
-.vercel
-

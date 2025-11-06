@@ -3,6 +3,3 @@ openai
 langchain-community
 langchain
 python-dotenv
-whitenoise
-psycopg2-binary
-dj-database-url
