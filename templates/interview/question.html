@@ -1,0 +1,509 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Question {{ question_number }} - AI Interview Coach{% endblock %}
+
+{% block content %}
+<div class="interview-page">
+    <div class="question-page">
+        <!-- Progress Header -->
+        <div class="progress-header">
+            <div class="header-content">
+                <div class="header-info">
+                    <h1 class="page-title">Interview in Progress</h1>
+                    <div class="interview-meta">
+                        <span class="meta-badge role-badge">{{ role }}</span>
+                        <span class="meta-badge type-badge">{{ interview_type }}</span>
+                        <span class="meta-badge level-badge">{{ experience_level }}</span>
+                    </div>
+                </div>
+                <div class="progress-indicator">
+                    <div class="progress-text">
+                        <span class="current">Question {{ question_number }}</span>
+                        <span class="divider">/</span>
+                        <span class="total">{{ total_questions }}</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ question_number|floatformat:0 }}0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Container -->
+        <div class="question-container">
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-badge">
+                        <span class="badge-number">Q{{ question_number }}</span>
+                    </div>
+                    <h2 class="question-title">{{ question.question }}</h2>
+                </div>
+
+                <div class="question-tips">
+                    <div class="tip-section">
+                        <div class="tip-header">
+                            <span class="tip-icon">🎯</span>
+                            <h3>Key Points to Address</h3>
+                        </div>
+                        <ul class="tip-list">
+                            {% for point in question.key_points %}
+                            <li class="tip-item">{{ point }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <form method="post" class="answer-form">
+                    {% csrf_token %}
+                    <div class="answer-section">
+                        <label class="answer-label">
+                            <span>Your Answer</span>
+                            <span class="char-count" id="charCount">0 characters</span>
+                        </label>
+                        <textarea 
+                            name="answer"
+                            class="answer-textarea"
+                            placeholder="Think about your response, then type it here... Or practice speaking it out loud first!"
+                            rows="10"
+                            id="answerInput"
+                            oninput="updateCharCount()"
+                        ></textarea>
+                        <div class="answer-hint">
+                            💡 <strong>Tip:</strong> Aim for 2-3 minutes when speaking. Use specific examples from your experience.
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="{% url 'interview:simulate' %}" class="btn-secondary">
+                            <span>← Cancel</span>
+                        </a>
+                        <button type="submit" class="btn-primary">
+                            <span>{% if question_number == total_questions %}Complete Interview{% else %}Next Question{% endif %}</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Practice Tips Sidebar -->
+            <div class="tips-sidebar">
+                <div class="tips-card">
+                    <h3 class="tips-title">💡 Interview Tips</h3>
+                    <div class="tips-content">
+                        <div class="tip-box">
+                            <div class="tip-emoji">🗣️</div>
+                            <div class="tip-text">
+                                <h4>Practice Out Loud</h4>
+                                <p>Say your answer aloud before typing to improve delivery</p>
+                            </div>
+                        </div>
+                        <div class="tip-box">
+                            <div class="tip-emoji">📝</div>
+                            <div class="tip-text">
+                                <h4>Be Specific</h4>
+                                <p>Use concrete examples and numbers when possible</p>
+                            </div>
+                        </div>
+                        <div class="tip-box">
+                            <div class="tip-emoji">⏱️</div>
+                            <div class="tip-text">
+                                <h4>Watch Your Time</h4>
+                                <p>Keep responses between 2-3 minutes</p>
+                            </div>
+                        </div>
+                        <div class="tip-box">
+                            <div class="tip-emoji">✨</div>
+                            <div class="tip-text">
+                                <h4>Stay Positive</h4>
+                                <p>Focus on what you learned and accomplished</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.interview-page {
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem 0;
+}
+
+.question-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Progress Header */
+.progress-header {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.page-title {
+    font-size: 1.75rem;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+.interview-meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.meta-badge {
+    padding: 0.375rem 0.875rem;
+    border-radius: 50px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.role-badge {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.type-badge {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.level-badge {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.progress-indicator {
+    text-align: right;
+}
+
+.progress-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.current {
+    color: #667eea;
+}
+
+.divider {
+    color: #cbd5e1;
+    margin: 0 0.25rem;
+}
+
+.total {
+    color: #94a3b8;
+}
+
+.progress-bar-container {
+    width: 200px;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 50px;
+    overflow: hidden;
+    margin-left: auto;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50px;
+    transition: width 0.3s ease;
+}
+
+/* Question Container */
+.question-container {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+    align-items: start;
+}
+
+.question-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.question-header {
+    margin-bottom: 2rem;
+}
+
+.question-badge {
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.badge-number {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.question-title {
+    font-size: 1.75rem;
+    color: #1e293b;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.question-tips {
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.tip-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tip-icon {
+    font-size: 1.25rem;
+}
+
+.tip-header h3 {
+    font-size: 1rem;
+    color: #1e293b;
+    margin: 0;
+}
+
+.tip-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tip-item {
+    padding-left: 1.5rem;
+    position: relative;
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.tip-item:before {
+    content: "•";
+    position: absolute;
+    left: 0.5rem;
+    color: #667eea;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+/* Answer Form */
+.answer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.answer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.answer-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #334155;
+}
+
+.char-count {
+    font-weight: 400;
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+.answer-textarea {
+    padding: 1.25rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-family: inherit;
+    line-height: 1.6;
+    resize: vertical;
+    transition: border-color 0.2s;
+}
+
+.answer-textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.answer-hint {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 0.875rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.btn-secondary,
+.btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    flex: 1;
+    justify-content: center;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+/* Tips Sidebar */
+.tips-sidebar {
+    position: sticky;
+    top: 2rem;
+}
+
+.tips-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.tips-title {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+}
+
+.tips-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.tip-box {
+    display: flex;
+    gap: 1rem;
+    align-items: start;
+}
+
+.tip-emoji {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.tip-text h4 {
+    font-size: 0.95rem;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.tip-text p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+}
+
+@media (max-width: 1024px) {
+    .question-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .tips-sidebar {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .progress-indicator {
+        width: 100%;
+        text-align: left;
+    }
+    
+    .progress-bar-container {
+        width: 100%;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-secondary,
+    .btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+function updateCharCount() {
+    const textarea = document.getElementById('answerInput');
+    const counter = document.getElementById('charCount');
+    counter.textContent = textarea.value.length + ' characters';
+}
+</script>
+{% endblock %}

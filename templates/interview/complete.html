@@ -1,0 +1,409 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Interview Complete - AI Interview Coach{% endblock %}
+
+{% block content %}
+<div class="completion-page">
+    <div class="completion-container">
+        <div class="completion-card">
+            <div class="success-animation">
+                <div class="checkmark-circle">
+                    <div class="checkmark">✓</div>
+                </div>
+            </div>
+
+            <h1 class="completion-title">Interview Complete! 🎉</h1>
+            <p class="completion-message">
+                Great job! You've successfully completed your {{ role }} interview practice session.
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-value">{{ answered_questions }}</div>
+                    <div class="stat-label">Questions Answered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value">{{ total_questions }}</div>
+                    <div class="stat-label">Total Questions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💪</div>
+                    <div class="stat-value">{% widthratio answered_questions total_questions 100 %}%</div>
+                    <div class="stat-label">Completion Rate</div>
+                </div>
+            </div>
+
+            <div class="next-steps">
+                <h2 class="next-steps-title">What's Next?</h2>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-icon">🔄</div>
+                        <h3>Practice Again</h3>
+                        <p>The more you practice, the more confident you'll become</p>
+                        <a href="{% url 'interview:simulate' %}" class="step-btn primary">
+                            Start New Interview
+                        </a>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">🗺️</div>
+                        <h3>Build Your Roadmap</h3>
+                        <p>Create a personalized learning path for your career goals</p>
+                        <a href="{% url 'roadmap:home' %}" class="step-btn secondary">
+                            Go to Roadmap
+                        </a>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">📄</div>
+                        <h3>Optimize Your Resume</h3>
+                        <p>Get AI-powered feedback to improve your resume</p>
+                        <a href="{% url 'resume:home' %}" class="step-btn secondary">
+                            Upload Resume
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-section">
+                <h3 class="tips-heading">💡 Pro Tips for Your Next Interview</h3>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <span class="tip-bullet">•</span>
+                        <p>Review your answers and identify areas for improvement</p>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-bullet">•</span>
+                        <p>Practice answering questions out loud to improve your delivery</p>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-bullet">•</span>
+                        <p>Research the company and role before the actual interview</p>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-bullet">•</span>
+                        <p>Prepare thoughtful questions to ask the interviewer</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="{% url 'dashboard' %}" class="btn-outline">
+                    ← Back to Dashboard
+                </a>
+                <a href="{% url 'interview:simulate' %}" class="btn-gradient">
+                    Practice More Questions →
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.completion-page {
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 3rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.completion-container {
+    max-width: 900px;
+    width: 100%;
+    padding: 0 2rem;
+}
+
+.completion-card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 3rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.success-animation {
+    margin-bottom: 2rem;
+}
+
+.checkmark-circle {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    animation: scaleIn 0.5s ease-out;
+}
+
+.checkmark {
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+    animation: checkmarkPop 0.3s 0.5s ease-out backwards;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes checkmarkPop {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.completion-title {
+    font-size: 2.5rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    font-weight: 800;
+}
+
+.completion-message {
+    font-size: 1.125rem;
+    color: #64748b;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    background: #f8fafc;
+    border-radius: 1rem;
+    padding: 2rem 1rem;
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #667eea;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.next-steps {
+    text-align: left;
+    margin-bottom: 3rem;
+}
+
+.next-steps-title {
+    font-size: 1.75rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.step-card {
+    background: #f8fafc;
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.step-card:hover {
+    border-color: #667eea;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
+}
+
+.step-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.step-card h3 {
+    font-size: 1.125rem;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+.step-card p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.step-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.step-btn.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.step-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.step-btn.secondary {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.step-btn.secondary:hover {
+    background: #667eea;
+    color: white;
+}
+
+.tips-section {
+    background: #fef3c7;
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: left;
+    margin-bottom: 3rem;
+}
+
+.tips-heading {
+    font-size: 1.25rem;
+    color: #92400e;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tip-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: start;
+}
+
+.tip-bullet {
+    color: #f59e0b;
+    font-size: 1.5rem;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.tip-item p {
+    color: #92400e;
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-outline,
+.btn-gradient {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-outline {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.btn-outline:hover {
+    background: #f1f5f9;
+}
+
+.btn-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+}
+
+.btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+@media (max-width: 768px) {
+    .completion-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .completion-title {
+        font-size: 2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-outline,
+    .btn-gradient {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}
