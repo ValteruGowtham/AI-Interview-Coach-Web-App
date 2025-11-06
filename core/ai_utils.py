@@ -271,3 +271,114 @@ def generate_fallback_resume_feedback():
         ],
         "missing_keywords": ["Add role-specific technical skills"]
     }
+
+
+def evaluate_interview_answers(questions, answers, role, interview_type):
+    """
+    Evaluate interview answers and provide marks and feedback
+    
+    Args:
+        questions: List of question objects
+        answers: List of user answers
+        role: Job role
+        interview_type: Type of interview
+        
+    Returns:
+        Dictionary with overall score, question-wise feedback, and tips
+    """
+    if not openai.api_key:
+        return generate_fallback_evaluation(len(answers))
+    
+    # Prepare the evaluation prompt
+    qa_pairs = []
+    for i, answer_data in enumerate(answers):
+        q_index = answer_data['question_index']
+        if q_index < len(questions):
+            qa_pairs.append({
+                'question': questions[q_index]['question'],
+                'expected_points': questions[q_index]['key_points'],
+                'user_answer': answer_data['answer']
+            })
+    
+    prompt = f"""Evaluate these interview answers for a {role} ({interview_type} interview):
+
+{json.dumps(qa_pairs, indent=2)}
+
+For each question, provide:
+1. Score out of 10
+2. What was good about the answer
+3. What could be improved
+4. Specific tips for improvement
+
+Also provide:
+- Overall score (average of all questions out of 10)
+- Overall strengths
+- Overall areas to improve
+- Top 3 actionable tips for future interviews
+
+Format as JSON: {{
+    "overall_score": number,
+    "overall_feedback": {{"strengths": [], "improvements": [], "tips": []}},
+    "question_feedback": [
+        {{"score": number, "good_points": [], "improvements": [], "tips": []}}
+    ]
+}}"""
+
+    try:
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an expert interview coach providing constructive feedback."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=2500
+        )
+        
+        content = response.choices[0].message.content
+        
+        # Try to extract JSON from markdown code blocks if present
+        if "```json" in content:
+            content = content.split("```json")[1].split("```")[0].strip()
+        elif "```" in content:
+            content = content.split("```")[1].split("```")[0].strip()
+        
+        evaluation_data = json.loads(content)
+        return evaluation_data
+        
+    except Exception as e:
+        print(f"Error evaluating answers with OpenAI: {e}")
+        return generate_fallback_evaluation(len(answers))
+
+
+def generate_fallback_evaluation(num_questions):
+    """Generate basic evaluation when OpenAI is unavailable"""
+    question_feedback = []
+    for i in range(num_questions):
+        question_feedback.append({
+            "score": 7,
+            "good_points": ["You provided a response", "Clear communication"],
+            "improvements": ["Add more specific examples", "Include measurable outcomes"],
+            "tips": ["Use the STAR method", "Be more concise"]
+        })
+    
+    return {
+        "overall_score": 7.0,
+        "overall_feedback": {
+            "strengths": [
+                "You completed all questions",
+                "Demonstrated effort in your responses"
+            ],
+            "improvements": [
+                "Provide more specific examples",
+                "Include quantifiable achievements",
+                "Structure answers more clearly"
+            ],
+            "tips": [
+                "Practice the STAR method (Situation, Task, Action, Result)",
+                "Prepare specific examples before the interview",
+                "Keep answers concise (2-3 minutes)"
+            ]
+        },
+        "question_feedback": question_feedback
+    }

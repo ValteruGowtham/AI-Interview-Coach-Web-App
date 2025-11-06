@@ -18,6 +18,18 @@
                 Great job! You've successfully completed your {{ role }} interview practice session.
             </p>
 
+            <!-- Overall Score -->
+            <div class="score-banner">
+                <div class="score-circle">
+                    <div class="score-value">{{ overall_score|floatformat:1 }}</div>
+                    <div class="score-label">/ 10</div>
+                </div>
+                <div class="score-text">
+                    <h2>Your Overall Score</h2>
+                    <p>{% if overall_score >= 8 %}Excellent performance!{% elif overall_score >= 6 %}Good job! Keep practicing.{% else %}Great start! Focus on improvement areas.{% endif %}</p>
+                </div>
+            </div>
+
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">📝</div>
@@ -25,14 +37,122 @@
                     <div class="stat-label">Questions Answered</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">✅</div>
-                    <div class="stat-value">{{ total_questions }}</div>
-                    <div class="stat-label">Total Questions</div>
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value">{{ overall_score|floatformat:1 }}/10</div>
+                    <div class="stat-label">Average Score</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">💪</div>
                     <div class="stat-value">{% widthratio answered_questions total_questions 100 %}%</div>
                     <div class="stat-label">Completion Rate</div>
+                </div>
+            </div>
+
+            <!-- Detailed Feedback -->
+            <div class="feedback-section">
+                <h2 class="section-title">📊 Detailed Feedback</h2>
+                
+                <!-- Overall Feedback -->
+                <div class="overall-feedback">
+                    <div class="feedback-card strengths-card">
+                        <div class="card-header">
+                            <span class="card-icon">✅</span>
+                            <h3>Your Strengths</h3>
+                        </div>
+                        <ul class="feedback-list">
+                            {% for strength in overall_feedback.strengths %}
+                            <li>{{ strength }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <div class="feedback-card improvements-card">
+                        <div class="card-header">
+                            <span class="card-icon">📈</span>
+                            <h3>Areas to Improve</h3>
+                        </div>
+                        <ul class="feedback-list">
+                            {% for improvement in overall_feedback.improvements %}
+                            <li>{{ improvement }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Question-by-Question Feedback -->
+                <div class="questions-feedback">
+                    <h3 class="subsection-title">Question-by-Question Analysis</h3>
+                    {% for qa in qa_feedback %}
+                    <div class="qa-card">
+                        <div class="qa-header">
+                            <div class="qa-number">Q{{ forloop.counter }}</div>
+                            {% if qa.feedback %}
+                            <div class="qa-score" style="{% if qa.feedback.score >= 8 %}background: #10b981{% elif qa.feedback.score >= 6 %}background: #f59e0b{% else %}background: #ef4444{% endif %}">
+                                {{ qa.feedback.score }}/10
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="qa-question">{{ qa.question }}</div>
+                        
+                        <div class="qa-answer">
+                            <strong>Your Answer:</strong>
+                            <p>{{ qa.answer|default:"No answer provided" }}</p>
+                        </div>
+                        
+                        {% if qa.feedback %}
+                        <div class="qa-feedback-grid">
+                            <div class="qa-feedback-box good">
+                                <div class="feedback-box-header">
+                                    <span class="feedback-icon">👍</span>
+                                    <span>What Went Well</span>
+                                </div>
+                                <ul>
+                                    {% for point in qa.feedback.good_points %}
+                                    <li>{{ point }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            
+                            <div class="qa-feedback-box improve">
+                                <div class="feedback-box-header">
+                                    <span class="feedback-icon">💡</span>
+                                    <span>Can Be Improved</span>
+                                </div>
+                                <ul>
+                                    {% for improvement in qa.feedback.improvements %}
+                                    <li>{{ improvement }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        {% if qa.feedback.tips %}
+                        <div class="qa-tips">
+                            <strong>💬 Tips:</strong>
+                            <ul>
+                                {% for tip in qa.feedback.tips %}
+                                <li>{{ tip }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Action Tips -->
+                <div class="action-tips-card">
+                    <div class="tips-header">
+                        <span class="tips-icon">🎯</span>
+                        <h3>Top Tips for Your Next Interview</h3>
+                    </div>
+                    <ul class="action-tips-list">
+                        {% for tip in overall_feedback.tips %}
+                        <li>{{ tip }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
 
@@ -67,23 +187,19 @@
             </div>
 
             <div class="tips-section">
-                <h3 class="tips-heading">💡 Pro Tips for Your Next Interview</h3>
+                <h3 class="tips-heading">� Keep Practicing!</h3>
                 <div class="tips-list">
                     <div class="tip-item">
                         <span class="tip-bullet">•</span>
-                        <p>Review your answers and identify areas for improvement</p>
+                        <p>Review the feedback above carefully</p>
                     </div>
                     <div class="tip-item">
                         <span class="tip-bullet">•</span>
-                        <p>Practice answering questions out loud to improve your delivery</p>
+                        <p>Practice implementing the suggested improvements</p>
                     </div>
                     <div class="tip-item">
                         <span class="tip-bullet">•</span>
-                        <p>Research the company and role before the actual interview</p>
-                    </div>
-                    <div class="tip-item">
-                        <span class="tip-bullet">•</span>
-                        <p>Prepare thoughtful questions to ask the interviewer</p>
+                        <p>Try another interview to track your progress</p>
                     </div>
                 </div>
             </div>
@@ -121,7 +237,53 @@
     border-radius: 1.5rem;
     padding: 3rem;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    text-align: center;
+}
+
+.score-banner {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    border-radius: 1rem;
+    color: white;
+    margin-bottom: 3rem;
+}
+
+.score-circle {
+    background: white;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.score-value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #667eea;
+    line-height: 1;
+}
+
+.score-label {
+    font-size: 1rem;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.score-text h2 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.score-text p {
+    font-size: 1.125rem;
+    opacity: 0.95;
+    margin: 0;
 }
 
 .success-animation {
@@ -175,13 +337,15 @@
     color: #1e293b;
     margin-bottom: 1rem;
     font-weight: 800;
+    text-align: center;
 }
 
 .completion-message {
     font-size: 1.125rem;
     color: #64748b;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     line-height: 1.6;
+    text-align: center;
 }
 
 .stats-grid {
@@ -189,6 +353,281 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     margin-bottom: 3rem;
+    text-align: center;
+}
+
+.feedback-section {
+    margin-bottom: 3rem;
+    text-align: left;
+}
+
+.section-title {
+    font-size: 1.75rem;
+    color: #1e293b;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.overall-feedback {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.feedback-card {
+    background: #f8fafc;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+}
+
+.strengths-card {
+    border-color: #10b981;
+}
+
+.improvements-card {
+    border-color: #f59e0b;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.card-icon {
+    font-size: 1.5rem;
+}
+
+.card-header h3 {
+    font-size: 1.125rem;
+    color: #1e293b;
+    margin: 0;
+}
+
+.feedback-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.feedback-list li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #475569;
+}
+
+.feedback-list li:before {
+    content: "•";
+    position: absolute;
+    left: 0.5rem;
+    color: #667eea;
+    font-weight: bold;
+}
+
+.questions-feedback {
+    margin-bottom: 2rem;
+}
+
+.subsection-title {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+}
+
+.qa-card {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.qa-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.qa-number {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.qa-score {
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.qa-question {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.qa-answer {
+    background: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.qa-answer strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #334155;
+}
+
+.qa-answer p {
+    color: #64748b;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.qa-feedback-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.qa-feedback-box {
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.qa-feedback-box.good {
+    background: #d1fae5;
+    border: 2px solid #10b981;
+}
+
+.qa-feedback-box.improve {
+    background: #fef3c7;
+    border: 2px solid #f59e0b;
+}
+
+.feedback-box-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #1e293b;
+}
+
+.feedback-icon {
+    font-size: 1.125rem;
+}
+
+.qa-feedback-box ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.qa-feedback-box ul li {
+    padding: 0.25rem 0;
+    padding-left: 1.25rem;
+    position: relative;
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+.qa-feedback-box ul li:before {
+    content: "•";
+    position: absolute;
+    left: 0.25rem;
+    color: #667eea;
+}
+
+.qa-tips {
+    background: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid #667eea;
+}
+
+.qa-tips strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #334155;
+}
+
+.qa-tips ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.qa-tips ul li {
+    padding: 0.25rem 0;
+    padding-left: 1.25rem;
+    position: relative;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.qa-tips ul li:before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #667eea;
+}
+
+.action-tips-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    border-radius: 1rem;
+    color: white;
+    margin-bottom: 2rem;
+}
+
+.tips-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.tips-icon {
+    font-size: 1.75rem;
+}
+
+.tips-header h3 {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.action-tips-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.action-tips-list li {
+    padding: 0.75rem 0;
+    padding-left: 2rem;
+    position: relative;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.action-tips-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0.5rem;
+    font-weight: bold;
+    font-size: 1.25rem;
 }
 
 .stat-card {
@@ -387,7 +826,20 @@
         font-size: 2rem;
     }
     
+    .score-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+    
     .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .overall-feedback {
+        grid-template-columns: 1fr;
+    }
+    
+    .qa-feedback-grid {
         grid-template-columns: 1fr;
     }
     

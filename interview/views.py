@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from core.ai_utils import generate_interview_questions
+from core.ai_utils import generate_interview_questions, evaluate_interview_answers
 
 def home(request):
     return render(request, "interview/home.html")
@@ -78,11 +78,31 @@ def question(request):
 def complete(request):
     questions = request.session.get('interview_questions', [])
     answers = request.session.get('user_answers', [])
+    role = request.session.get('interview_role', 'Professional')
+    interview_type = request.session.get('interview_type', 'mixed')
+    
+    # Evaluate the answers using AI
+    evaluation = evaluate_interview_answers(questions, answers, role, interview_type)
+    
+    # Combine questions with their answers and feedback
+    qa_feedback = []
+    for i, answer_data in enumerate(answers):
+        q_index = answer_data['question_index']
+        if q_index < len(questions):
+            feedback = evaluation['question_feedback'][i] if i < len(evaluation['question_feedback']) else None
+            qa_feedback.append({
+                'question': questions[q_index]['question'],
+                'answer': answer_data['answer'],
+                'feedback': feedback
+            })
     
     context = {
         'total_questions': len(questions),
         'answered_questions': len(answers),
-        'role': request.session.get('interview_role'),
+        'role': role,
+        'overall_score': evaluation.get('overall_score', 0),
+        'overall_feedback': evaluation.get('overall_feedback', {}),
+        'qa_feedback': qa_feedback,
     }
     
     return render(request, "interview/complete.html", context)
