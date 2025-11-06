@@ -6,7 +6,7 @@ services:
     startCommand: "gunicorn ai_interview_coach.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.9.0
+        value: 3.11.0
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
