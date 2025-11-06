@@ -22,7 +22,6 @@ ENV/
 
 # Static files
 staticfiles/
-staticfiles_build/
 
 # IDE
 .vscode/
