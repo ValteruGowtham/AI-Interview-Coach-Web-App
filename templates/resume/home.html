@@ -4,102 +4,591 @@
 {% block title %}Resume Analysis - AI Interview Coach{% endblock %}
 
 {% block content %}
-<div class="resume-container">
-    <div class="page-header">
-        <h1>Resume Analysis</h1>
-        <p class="page-subtitle">Get AI-powered insights to improve your resume and stand out to employers</p>
-    </div>
-
-    <div class="resume-actions">
-        <div class="upload-section">
-            <h2>Upload Your Resume</h2>
-            <p>Upload your resume to get personalized feedback and improvement suggestions</p>
-            <a href="{% url 'resume:upload_resume' %}" class="btn btn-primary btn-large">Upload Resume</a>
+<div class="resume-page">
+    <!-- Hero Section -->
+    <div class="resume-hero">
+        <div class="hero-container">
+            <div class="hero-badge">
+                <span class="badge-icon">📄</span>
+                <span>AI-Powered Analysis</span>
+            </div>
+            <h1 class="hero-title">Resume Analysis</h1>
+            <p class="hero-subtitle">Upload your resume and get instant AI-powered insights to stand out from the competition</p>
+            <a href="{% url 'resume:upload_resume' %}" class="hero-button">
+                <span>Upload Resume</span>
+                <span class="button-icon">→</span>
+            </a>
         </div>
     </div>
 
-    <div class="resume-list">
-        <h2>Your Resumes</h2>
-        {% if resumes %}
-            <div class="resume-grid">
-                {% for resume in resumes %}
-                <div class="resume-card">
-                    <div class="resume-header">
-                        <div class="resume-icon">📄</div>
-                        <div class="resume-info">
-                            <h3>{{ resume.title|default:resume.file.name }}</h3>
-                            <p class="upload-date">Uploaded {{ resume.uploaded_at|date:"M d, Y" }}</p>
+    <!-- Main Content -->
+    <div class="resume-main">
+        <!-- Resumes Section -->
+        <div class="resumes-section">
+            <div class="section-header">
+                <h2 class="section-title">Your Resumes</h2>
+                <p class="section-subtitle">Manage and analyze your uploaded resumes</p>
+            </div>
+
+            {% if resumes %}
+                <div class="resumes-grid">
+                    {% for resume in resumes %}
+                    <div class="resume-card">
+                        <div class="resume-card-header">
+                            <div class="resume-file-icon">
+                                <span>📄</span>
+                            </div>
+                            <div class="resume-card-badge">Active</div>
+                        </div>
+                        <h3 class="resume-title">{{ resume.title|default:resume.file.name }}</h3>
+                        <div class="resume-meta">
+                            <span class="meta-item">
+                                <span class="meta-icon">📅</span>
+                                <span>{{ resume.uploaded_at|date:"M d, Y" }}</span>
+                            </span>
+                            <span class="meta-item">
+                                <span class="meta-icon">🕒</span>
+                                <span>{{ resume.uploaded_at|timesince }} ago</span>
+                            </span>
+                        </div>
+                        <div class="resume-actions">
+                            <a href="{{ resume.file.url }}" class="resume-action-btn primary" target="_blank">
+                                <span>View Resume</span>
+                            </a>
+                            <a href="#" class="resume-action-btn secondary" onclick="analyzeResume(event, '{{ resume.id }}')">
+                                <span>Analyze</span>
+                            </a>
                         </div>
                     </div>
-                    <div class="resume-actions">
-                        <a href="{{ resume.file.url }}" class="btn btn-outline" target="_blank">View</a>
-                        <button class="btn btn-secondary">Analyze</button>
-                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="empty-state">
-                <div class="empty-icon">📄</div>
-                <h3>No resumes uploaded yet</h3>
-                <p>Upload your first resume to get started with AI-powered analysis</p>
-                <a href="{% url 'resume:upload_resume' %}" class="btn btn-primary">Upload Your First Resume</a>
-            </div>
-        {% endif %}
-    </div>
+            {% else %}
+                <div class="empty-state-card">
+                    <div class="empty-state-icon">
+                        <span>📭</span>
+                    </div>
+                    <h3 class="empty-state-title">No resumes uploaded yet</h3>
+                    <p class="empty-state-text">Upload your first resume to get AI-powered analysis and improve your chances of landing interviews</p>
+                    <a href="{% url 'resume:upload_resume' %}" class="empty-state-button">
+                        <span>Upload Your First Resume</span>
+                        <span class="button-arrow">→</span>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
 
-    <div class="resume-features">
-        <h2>What You'll Get</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>ATS Optimization</h3>
-                <p>Ensure your resume passes through Applicant Tracking Systems</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>Keyword Analysis</h3>
-                <p>Identify missing keywords relevant to your target role</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">📝</div>
-                <h3>Content Suggestions</h3>
-                <p>Get specific recommendations to improve your content</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">📈</div>
-                <h3>Score Tracking</h3>
-                <p>Track your resume's improvement over time</p>
+        <!-- Features Grid -->
+        <div class="features-section">
+            <h2 class="features-title">What You Get with AI Analysis</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon-box purple">
+                        <span>🎯</span>
+                    </div>
+                    <h3 class="feature-title">ATS Optimization</h3>
+                    <p class="feature-text">Ensure your resume passes Applicant Tracking Systems with keyword optimization</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-box blue">
+                        <span>✨</span>
+                    </div>
+                    <h3 class="feature-title">Content Analysis</h3>
+                    <p class="feature-text">Get in-depth feedback on your experience descriptions and achievements</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-box green">
+                        <span>📊</span>
+                    </div>
+                    <h3 class="feature-title">Skills Assessment</h3>
+                    <p class="feature-text">Identify gaps and strengths in your technical and soft skills</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-box orange">
+                        <span>💡</span>
+                    </div>
+                    <h3 class="feature-title">Actionable Insights</h3>
+                    <p class="feature-text">Receive specific, actionable suggestions to improve your resume</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="resume-tips">
-        <h2>Resume Best Practices</h2>
-        <div class="tips-grid">
-            <div class="tip-card">
-                <h4>Keep It Concise</h4>
-                <p>Limit your resume to 1-2 pages for most roles</p>
+        <!-- Tips Section -->
+        <div class="tips-section">
+            <div class="tips-header">
+                <h2 class="tips-title">Pro Resume Tips</h2>
+                <p class="tips-subtitle">Expert advice to make your resume stand out</p>
             </div>
-            
-            <div class="tip-card">
-                <h4>Use Action Verbs</h4>
-                <p>Start bullet points with strong action verbs</p>
-            </div>
-            
-            <div class="tip-card">
-                <h4>Quantify Achievements</h4>
-                <p>Include specific numbers and metrics when possible</p>
-            </div>
-            
-            <div class="tip-card">
-                <h4>Tailor to Job</h4>
-                <p>Customize your resume for each specific role</p>
+
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-number">01</div>
+                    <div class="tip-content">
+                        <h3 class="tip-title">Keep it Concise</h3>
+                        <p class="tip-text">Aim for 1-2 pages maximum. Recruiters spend only 6 seconds on initial review, so make every word count.</p>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">02</div>
+                    <div class="tip-content">
+                        <h3 class="tip-title">Use Action Verbs</h3>
+                        <p class="tip-text">Start bullet points with powerful verbs: "Led", "Developed", "Achieved", "Optimized", "Transformed".</p>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">03</div>
+                    <div class="tip-content">
+                        <h3 class="tip-title">Quantify Results</h3>
+                        <p class="tip-text">Include numbers and metrics: "Increased sales by 45%" is more impactful than "Increased sales".</p>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">04</div>
+                    <div class="tip-content">
+                        <h3 class="tip-title">Tailor for Each Job</h3>
+                        <p class="tip-text">Customize your resume for each position by highlighting relevant skills and experience from the job description.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+/* Resume Page Styles */
+.resume-page {
+    min-height: calc(100vh - 80px);
+    background: #f8fafc;
+}
+
+.resume-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.hero-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+.badge-icon {
+    font-size: 1.25rem;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+    font-size: 1.15rem;
+    opacity: 0.95;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: white;
+    color: #667eea;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: all 0.2s;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hero-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.button-icon,
+.button-arrow {
+    font-size: 1.25rem;
+}
+
+.resume-main {
+    max-width: 1400px;
+    margin: -3rem auto 0;
+    padding: 0 2rem 3rem;
+}
+
+.resumes-section {
+    margin-bottom: 3rem;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+}
+
+.resumes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.resume-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s;
+}
+
+.resume-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.resume-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.resume-file-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.resume-card-badge {
+    padding: 0.25rem 0.75rem;
+    background: #dcfce7;
+    color: #166534;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.resume-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.resume-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.meta-icon {
+    font-size: 1rem;
+}
+
+.resume-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.resume-action-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.resume-action-btn.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.resume-action-btn.primary:hover {
+    opacity: 0.9;
+}
+
+.resume-action-btn.secondary {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.resume-action-btn.secondary:hover {
+    background: #e2e8f0;
+}
+
+/* Empty State */
+.empty-state-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+}
+
+.empty-state-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+.empty-state-text {
+    font-size: 1rem;
+    color: #64748b;
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+}
+
+.empty-state-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.empty-state-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Features Section */
+.features-section {
+    margin-bottom: 3rem;
+}
+
+.features-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 2.5rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+}
+
+.feature-icon-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.feature-icon-box.purple {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.feature-icon-box.blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.feature-icon-box.green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.feature-icon-box.orange {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+}
+
+.feature-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.feature-text {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Tips Section */
+.tips-section {
+    background: white;
+    border-radius: 1rem;
+    padding: 3rem 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.tips-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.tips-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.tips-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.tip-card {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+}
+
+.tip-card:hover {
+    background: #f1f5f9;
+    transform: translateX(4px);
+}
+
+.tip-number {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.tip-content {
+    flex: 1;
+}
+
+.tip-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.tip-text {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .resumes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .features-grid,
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+function analyzeResume(event, resumeId) {
+    event.preventDefault();
+    alert('Resume analysis feature coming soon! This will provide AI-powered feedback on your resume.');
+}
+</script>
 {% endblock %}

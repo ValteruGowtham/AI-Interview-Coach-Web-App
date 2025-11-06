@@ -4,143 +4,827 @@
 {% block title %}Interview Simulation - AI Interview Coach{% endblock %}
 
 {% block content %}
-<div class="simulate-container">
+<div class="interview-page">
     {% if not asked %}
-    <div class="page-header">
-        <h1>Start Your Interview</h1>
-        <p class="page-subtitle">Choose your role and begin practicing with our AI interviewer</p>
-    </div>
-
-    <div class="interview-setup">
-        <div class="setup-card">
-            <div class="setup-header">
-                <div class="setup-icon">🎯</div>
-                <h2>Interview Setup</h2>
-                <p>Tell us about the role you're interviewing for to get personalized questions</p>
+    <!-- Setup Phase -->
+    <div class="interview-hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-icon">✨</span>
+                <span>AI-Powered Interview Practice</span>
             </div>
-
-            <form method="post" class="setup-form">
-                {% csrf_token %}
-                
-                <div class="form-group">
-                    <label for="role">Job Title / Role</label>
-                    <input 
-                        type="text" 
-                        name="role" 
-                        id="role" 
-                        placeholder="e.g., Software Engineer, Data Scientist, Product Manager" 
-                        required
-                        class="form-input"
-                    >
-                    <small class="form-help">Be specific about the role to get more relevant questions</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="interview-type">Interview Type</label>
-                    <select name="interview_type" id="interview-type" class="form-select">
-                        <option value="technical">Technical Interview</option>
-                        <option value="behavioral">Behavioral Interview</option>
-                        <option value="system-design">System Design</option>
-                        <option value="mixed">Mixed (Technical + Behavioral)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="experience-level">Experience Level</label>
-                    <select name="experience_level" id="experience-level" class="form-select">
-                        <option value="entry">Entry Level (0-2 years)</option>
-                        <option value="mid">Mid Level (3-5 years)</option>
-                        <option value="senior">Senior Level (5+ years)</option>
-                    </select>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary btn-large">Start Interview</button>
-                    <a href="{% url 'interview:home' %}" class="btn btn-outline">Back to Practice</a>
-                </div>
-            </form>
+            <h1 class="hero-title">Practice Like You're in the Real Interview</h1>
+            <p class="hero-subtitle">Get personalized questions powered by AI and practice answering them to build confidence</p>
         </div>
     </div>
 
-    <div class="interview-tips">
-        <h2>Before You Start</h2>
-        <div class="tips-grid">
-            <div class="tip-card">
-                <h4>Find a Quiet Space</h4>
-                <p>Ensure you're in a quiet environment where you can focus</p>
+    <div class="setup-section">
+        <div class="setup-content">
+            <div class="setup-form-container">
+                <div class="form-header">
+                    <h2>Configure Your Interview</h2>
+                    <p>Tell us what you're preparing for</p>
+                </div>
+
+                <form method="post" class="modern-form">
+                    {% csrf_token %}
+                    
+                    <div class="form-field">
+                        <label for="role" class="field-label">
+                            <span class="label-text">Target Role</span>
+                            <span class="label-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="role" 
+                            id="role" 
+                            placeholder="e.g., Full Stack Developer, Product Manager" 
+                            required
+                            class="field-input"
+                        >
+                        <span class="field-hint">The more specific, the better the questions</span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="interview-type" class="field-label">
+                                <span class="label-text">Interview Type</span>
+                            </label>
+                            <select name="interview_type" id="interview-type" class="field-select">
+                                <option value="technical">💻 Technical</option>
+                                <option value="behavioral">🧠 Behavioral</option>
+                                <option value="system-design">🏗️ System Design</option>
+                                <option value="mixed">🎯 Mixed</option>
+                            </select>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="experience-level" class="field-label">
+                                <span class="label-text">Experience Level</span>
+                            </label>
+                            <select name="experience_level" id="experience-level" class="field-select">
+                                <option value="entry">🌱 Entry (0-2 years)</option>
+                                <option value="mid">🚀 Mid (3-5 years)</option>
+                                <option value="senior">⭐ Senior (5+ years)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-submit">
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-text">Generate Interview Questions</span>
+                            <span class="btn-icon">→</span>
+                        </button>
+                    </div>
+                </form>
             </div>
-            
-            <div class="tip-card">
-                <h4>Have Your Resume Ready</h4>
-                <p>Keep your resume handy for reference during the interview</p>
-            </div>
-            
-            <div class="tip-card">
-                <h4>Think About Examples</h4>
-                <p>Prepare specific examples from your experience</p>
-            </div>
-            
-            <div class="tip-card">
-                <h4>Take Your Time</h4>
-                <p>Don't rush your answers - think before you respond</p>
+
+            <div class="setup-tips">
+                <h3 class="tips-title">💡 Interview Tips</h3>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-icon">🎯</div>
+                        <div class="tip-content">
+                            <h4>Use the STAR Method</h4>
+                            <p>Situation, Task, Action, Result - structure your answers clearly</p>
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">💬</div>
+                        <div class="tip-content">
+                            <h4>Be Specific</h4>
+                            <p>Use concrete examples from your experience</p>
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">⏱️</div>
+                        <div class="tip-content">
+                            <h4>Keep It Concise</h4>
+                            <p>Aim for 2-3 minute responses to each question</p>
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">🔄</div>
+                        <div class="tip-content">
+                            <h4>Practice Repeatedly</h4>
+                            <p>The more you practice, the more confident you'll become</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     {% else %}
-    <div class="interview-session">
-        <div class="interview-header">
-            <h1>Interview in Progress</h1>
-            <div class="interview-info">
-                <span class="role-badge">{{ role }}</span>
-                <span class="timer">00:00</span>
+    <!-- Questions Phase -->
+    <div class="questions-page">
+        <div class="questions-header">
+            <div class="header-left">
+                <h1 class="page-title">Your Interview Questions</h1>
+                <div class="interview-meta">
+                    <span class="meta-badge role-badge">{{ role }}</span>
+                    <span class="meta-badge type-badge">{{ interview_type }}</span>
+                    <span class="meta-badge level-badge">{{ experience_level }}</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="{% url 'interview:simulate' %}" class="action-btn primary-action">
+                    <span>🔄</span>
+                    <span>New Interview</span>
+                </a>
+                <a href="{% url 'interview:home' %}" class="action-btn secondary-action">
+                    <span>←</span>
+                    <span>Back</span>
+                </a>
             </div>
         </div>
 
-        <div class="interview-content">
-            <div class="question-section">
-                <div class="question-card">
-                    <h3>Question 1</h3>
-                    <p class="question-text">Tell me about a challenging project you worked on and how you overcame obstacles.</p>
+        <div class="questions-grid">
+            {% for question in questions %}
+            <div class="question-box" data-question="{{ forloop.counter }}">
+                <div class="question-number">
+                    <span class="number-badge">Q{{ forloop.counter }}</span>
+                    <span class="number-total">of {{ questions|length }}</span>
+                </div>
+
+                <div class="question-main">
+                    <h3 class="question-title">{{ question.question }}</h3>
                     
-                    <div class="response-area">
-                        <textarea 
-                            placeholder="Type your response here..." 
-                            class="response-input"
-                            rows="6"
-                        ></textarea>
-                        
-                        <div class="response-actions">
-                            <button class="btn btn-primary">Submit Answer</button>
-                            <button class="btn btn-outline">Skip Question</button>
+                    <div class="question-guide">
+                        <div class="guide-section">
+                            <div class="guide-header">
+                                <span class="guide-icon">🎯</span>
+                                <h4>Key Points to Cover</h4>
+                            </div>
+                            <ul class="guide-list">
+                                {% for point in question.key_points %}
+                                <li class="guide-item">{{ point }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <div class="guide-section">
+                            <div class="guide-header">
+                                <span class="guide-icon">💡</span>
+                                <h4>How to Structure Your Answer</h4>
+                            </div>
+                            <p class="guide-text">{{ question.sample_answer_structure }}</p>
                         </div>
                     </div>
                 </div>
+
+                <div class="answer-section">
+                    <label class="answer-label">
+                        <span>Your Answer</span>
+                        <span class="char-count" id="count-{{ forloop.counter }}">0 characters</span>
+                    </label>
+                    <textarea 
+                        class="answer-input"
+                        placeholder="Type your response here... Practice speaking it out loud first!"
+                        rows="8"
+                        id="answer-{{ forloop.counter }}"
+                        oninput="updateCharCount({{ forloop.counter }})"
+                    ></textarea>
+                    
+                    <div class="answer-actions">
+                        <button class="save-btn" onclick="saveAnswer({{ forloop.counter }})">
+                            <span class="save-icon">💾</span>
+                            <span>Save Answer</span>
+                        </button>
+                        <button class="voice-btn" onclick="practiceAloud({{ forloop.counter }})">
+                            <span class="voice-icon">🎤</span>
+                            <span>Practice Aloud</span>
+                        </button>
+                    </div>
+                </div>
             </div>
+            {% endfor %}
+        </div>
 
-            <div class="interview-sidebar">
-                <div class="progress-card">
-                    <h4>Progress</h4>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 20%"></div>
-                    </div>
-                    <span class="progress-text">1 of 5 questions</span>
-                </div>
-
-                <div class="feedback-card">
-                    <h4>AI Feedback</h4>
-                    <div class="feedback-content">
-                        <p>Your response will be analyzed here...</p>
-                    </div>
-                </div>
-
-                <div class="interview-controls">
-                    <button class="btn btn-outline">Pause Interview</button>
-                    <button class="btn btn-secondary">End Interview</button>
+        <div class="completion-card">
+            <div class="completion-content">
+                <div class="completion-icon">🎉</div>
+                <h3>Ready to Submit?</h3>
+                <p>Review your answers and practice them out loud before moving on</p>
+                <div class="completion-actions">
+                    <button class="complete-btn" onclick="completeInterview()">
+                        <span>Complete Interview</span>
+                        <span>✓</span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+    function updateCharCount(questionNum) {
+        const textarea = document.getElementById('answer-' + questionNum);
+        const counter = document.getElementById('count-' + questionNum);
+        counter.textContent = textarea.value.length + ' characters';
+    }
+
+    function saveAnswer(questionNum) {
+        const answer = document.getElementById('answer-' + questionNum).value;
+        if (answer.trim()) {
+            const btn = event.target.closest('.save-btn');
+            btn.innerHTML = '<span class="save-icon">✓</span><span>Saved!</span>';
+            btn.style.background = '#10b981';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span class="save-icon">💾</span><span>Save Answer</span>';
+                btn.style.background = '';
+            }, 2000);
+            
+            // Store in localStorage for now
+            localStorage.setItem('interview-answer-' + questionNum, answer);
+        } else {
+            alert('Please enter an answer first.');
+        }
+    }
+
+    function practiceAloud(questionNum) {
+        alert('💡 Tip: Read your answer out loud to practice delivery and timing. This helps you sound more confident in the actual interview!');
+    }
+
+    function completeInterview() {
+        const totalQuestions = {{ questions|length }};
+        let answered = 0;
+        
+        for (let i = 1; i <= totalQuestions; i++) {
+            const answer = document.getElementById('answer-' + i).value;
+            if (answer.trim()) answered++;
+        }
+        
+        if (answered === 0) {
+            alert('Try answering at least one question before completing!');
+            return;
+        }
+        
+        const message = `Great job! You answered ${answered} out of ${totalQuestions} questions.\n\nKeep practicing to improve your interview skills!`;
+        alert(message);
+        
+        if (confirm('Start a new interview?')) {
+            window.location.href = '{% url "interview:simulate" %}';
+        }
+    }
+
+    // Restore saved answers
+    document.addEventListener('DOMContentLoaded', function() {
+        const totalQuestions = {{ questions|length }};
+        for (let i = 1; i <= totalQuestions; i++) {
+            const saved = localStorage.getItem('interview-answer-' + i);
+            if (saved) {
+                document.getElementById('answer-' + i).value = saved;
+                updateCharCount(i);
+            }
+        }
+    });
+    </script>
     {% endif %}
 </div>
+
+<style>
+/* Interview Page Styles */
+.interview-page {
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 3rem 0;
+}
+
+.interview-hero {
+    text-align: center;
+    color: white;
+    padding: 2rem 1rem 3rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+.badge-icon {
+    font-size: 1.2rem;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    opacity: 0.95;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.setup-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 3rem;
+}
+
+.setup-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.setup-form-container {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.form-header {
+    margin-bottom: 2rem;
+}
+
+.form-header h2 {
+    font-size: 1.75rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.form-header p {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.modern-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.field-label {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #334155;
+}
+
+.label-required {
+    color: #ef4444;
+}
+
+.field-input,
+.field-select {
+    padding: 0.875rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.field-input:focus,
+.field-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.field-hint {
+    font-size: 0.8125rem;
+    color: #64748b;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-submit {
+    margin-top: 1rem;
+}
+
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.btn-icon {
+    font-size: 1.25rem;
+}
+
+.setup-tips {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.tips-title {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+}
+
+.tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.tip-item {
+    display: flex;
+    gap: 1rem;
+}
+
+.tip-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.tip-content h4 {
+    font-size: 0.95rem;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.tip-content p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Questions Page */
+.questions-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.questions-header {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.page-title {
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+.interview-meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.meta-badge {
+    padding: 0.375rem 0.875rem;
+    border-radius: 50px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.role-badge {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.type-badge {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.level-badge {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+}
+
+.primary-action {
+    background: #667eea;
+    color: white;
+}
+
+.primary-action:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+}
+
+.secondary-action {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.secondary-action:hover {
+    background: #e2e8f0;
+}
+
+.questions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.question-box {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.question-number {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.number-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.number-total {
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+.question-title {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.question-guide {
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.guide-section {
+    margin-bottom: 1.5rem;
+}
+
+.guide-section:last-child {
+    margin-bottom: 0;
+}
+
+.guide-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.guide-icon {
+    font-size: 1.25rem;
+}
+
+.guide-header h4 {
+    font-size: 0.95rem;
+    color: #1e293b;
+    margin: 0;
+}
+
+.guide-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.guide-item {
+    padding-left: 1.5rem;
+    position: relative;
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.guide-item:before {
+    content: "•";
+    position: absolute;
+    left: 0.5rem;
+    color: #667eea;
+    font-weight: bold;
+}
+
+.guide-text {
+    color: #475569;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.answer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.answer-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #334155;
+}
+
+.char-count {
+    font-weight: 400;
+    color: #94a3b8;
+    font-size: 0.8125rem;
+}
+
+.answer-input {
+    padding: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    line-height: 1.6;
+    resize: vertical;
+    transition: border-color 0.2s;
+}
+
+.answer-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.answer-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.save-btn,
+.voice-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+}
+
+.save-btn {
+    background: #667eea;
+    color: white;
+}
+
+.save-btn:hover {
+    background: #5568d3;
+}
+
+.voice-btn {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.voice-btn:hover {
+    background: #e2e8f0;
+}
+
+.completion-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 1rem;
+    padding: 2.5rem;
+    text-align: center;
+    color: white;
+    margin-top: 3rem;
+}
+
+.completion-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.completion-content h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.completion-content p {
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+
+.complete-btn {
+    background: white;
+    color: #667eea;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.2s;
+}
+
+.complete-btn:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .setup-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .questions-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+    
+    .header-actions {
+        width: 100%;
+    }
+    
+    .action-btn {
+        flex: 1;
+        justify-content: center;
+    }
+}
+</style>
 {% endblock %}

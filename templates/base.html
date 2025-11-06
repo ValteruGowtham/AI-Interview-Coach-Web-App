@@ -9,44 +9,428 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="main-header">
-        <div class="header-container">
-            <div class="logo">
-                <a href="{% url 'home' %}">
-                    <span class="logo-icon">🤖</span>
-                    <span class="logo-text">AI Interview Coach</span>
+    <header class="modern-header">
+        <div class="header-wrapper">
+            <div class="header-left">
+                <a href="{% url 'home' %}" class="brand-logo">
+                    <div class="logo-icon-box">
+                        <span class="logo-emoji">🤖</span>
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-name">AI Interview Coach</span>
+                        <span class="brand-tagline">Ace Your Interviews</span>
+                    </div>
                 </a>
             </div>
             
-            <nav class="main-nav">
+            <nav class="header-nav">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
-                    <a href="{% url 'interview:home' %}" class="nav-link">Interview</a>
-                    <a href="{% url 'resume:home' %}" class="nav-link">Resume</a>
-                    <a href="{% url 'roadmap:home' %}" class="nav-link">Roadmap</a>
+                    <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                        <span class="nav-icon">🏠</span>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{% url 'interview:home' %}" class="nav-item {% if 'interview' in request.path %}active{% endif %}">
+                        <span class="nav-icon">🎤</span>
+                        <span>Interview</span>
+                    </a>
+                    <a href="{% url 'resume:home' %}" class="nav-item {% if 'resume' in request.path %}active{% endif %}">
+                        <span class="nav-icon">📄</span>
+                        <span>Resume</span>
+                    </a>
+                    <a href="{% url 'roadmap:home' %}" class="nav-item {% if 'roadmap' in request.path %}active{% endif %}">
+                        <span class="nav-icon">🗺️</span>
+                        <span>Roadmap</span>
+                    </a>
                 {% else %}
-                    <a href="{% url 'home' %}" class="nav-link">Home</a>
-                    <a href="#features" class="nav-link">Features</a>
-                    <a href="#how-it-works" class="nav-link">How It Works</a>
+                    <a href="{% url 'home' %}" class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+                    <a href="#features" class="nav-item">Features</a>
+                    <a href="#how-it-works" class="nav-item">How It Works</a>
                 {% endif %}
             </nav>
             
-            <div class="auth-section">
+            <div class="header-right">
                 {% if user.is_authenticated %}
-                    <div class="user-menu">
-                        <span class="username">{{ user.username }}</span>
-                        <div class="dropdown-menu">
-                            <a href="{% url 'profile' %}" class="dropdown-item">Profile</a>
-                            <a href="{% url 'logout' %}" class="dropdown-item">Sign Out</a>
+                    <div class="user-dropdown">
+                        <button class="user-button" onclick="toggleDropdown()">
+                            <div class="user-avatar">
+                                <span>{{ user.username|slice:":2"|upper }}</span>
+                            </div>
+                            <span class="user-name">{{ user.username }}</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-panel" id="userDropdown">
+                            <div class="dropdown-header">
+                                <div class="dropdown-avatar">{{ user.username|slice:":2"|upper }}</div>
+                                <div class="dropdown-info">
+                                    <div class="dropdown-name">{{ user.get_full_name|default:user.username }}</div>
+                                    <div class="dropdown-email">{{ user.email }}</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a href="{% url 'profile' %}" class="dropdown-link">
+                                <span class="link-icon">👤</span>
+                                <span>Profile Settings</span>
+                            </a>
+                            <a href="{% url 'dashboard' %}" class="dropdown-link">
+                                <span class="link-icon">📊</span>
+                                <span>Dashboard</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <form method="post" action="{% url 'logout' %}" style="margin: 0; padding: 0;">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-link logout" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; font-family: inherit; font-size: inherit;">
+                                    <span class="link-icon">🚪</span>
+                                    <span>Sign Out</span>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-outline">Sign In</a>
-                    <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
+                    <a href="{% url 'login' %}" class="header-btn secondary">Sign In</a>
+                    <a href="{% url 'register' %}" class="header-btn primary">Get Started</a>
                 {% endif %}
             </div>
         </div>
     </header>
+
+    <style>
+    /* Modern Header Styles */
+    .modern-header {
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-wrapper {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 70px;
+    }
+
+    .header-left {
+        flex-shrink: 0;
+    }
+
+    .brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        transition: transform 0.2s;
+    }
+
+    .brand-logo:hover {
+        transform: scale(1.02);
+    }
+
+    .logo-icon-box {
+        width: 42px;
+        height: 42px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .brand-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brand-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1e293b;
+        line-height: 1.2;
+    }
+
+    .brand-tagline {
+        font-size: 0.7rem;
+        color: #667eea;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .header-nav {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1rem;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        border-radius: 0.5rem;
+        transition: all 0.2s;
+        position: relative;
+    }
+
+    .nav-item:hover {
+        color: #667eea;
+        background: #f8fafc;
+    }
+
+    .nav-item.active {
+        color: #667eea;
+        background: #f1f5f9;
+    }
+
+    .nav-item.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40%;
+        height: 2px;
+        background: #667eea;
+    }
+
+    .nav-icon {
+        font-size: 1.1rem;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .header-btn {
+        padding: 0.625rem 1.25rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+
+    .header-btn.secondary {
+        color: #475569;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+
+    .header-btn.secondary:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+
+    .header-btn.primary {
+        color: white;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+    }
+
+    .header-btn.primary:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .user-dropdown {
+        position: relative;
+    }
+
+    .user-button {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        padding: 0.5rem 0.75rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.625rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .user-button:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.75rem;
+    }
+
+    .user-name {
+        font-weight: 500;
+        color: #1e293b;
+        font-size: 0.9rem;
+    }
+
+    .dropdown-arrow {
+        color: #94a3b8;
+        font-size: 0.625rem;
+        transition: transform 0.2s;
+    }
+
+    .user-button:hover .dropdown-arrow {
+        transform: translateY(2px);
+    }
+
+    .dropdown-panel {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        right: 0;
+        width: 280px;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.2s;
+    }
+
+    .dropdown-panel.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .dropdown-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .dropdown-avatar {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .dropdown-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .dropdown-name {
+        font-weight: 600;
+        color: #1e293b;
+        font-size: 0.9rem;
+        margin-bottom: 0.125rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .dropdown-email {
+        font-size: 0.8rem;
+        color: #64748b;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .dropdown-divider {
+        height: 1px;
+        background: #f1f5f9;
+        margin: 0.5rem 0;
+    }
+
+    .dropdown-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        color: #475569;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .dropdown-link:hover {
+        background: #f8fafc;
+        color: #667eea;
+    }
+
+    .dropdown-link.logout:hover {
+        background: #fef2f2;
+        color: #ef4444;
+    }
+
+    .link-icon {
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .header-wrapper {
+            padding: 0 1rem;
+        }
+
+        .brand-tagline {
+            display: none;
+        }
+
+        .nav-item span:not(.nav-icon) {
+            display: none;
+        }
+
+        .user-name {
+            display: none;
+        }
+    }
+    </style>
+
+    <script>
+    function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('userDropdown');
+        const userButton = document.querySelector('.user-button');
+        
+        if (dropdown && userButton && !userButton.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+    </script>
 
     {% if messages %}
     <div class="messages-container">

@@ -106,6 +106,11 @@ function initializeFormValidation() {
     const forms = document.querySelectorAll('form');
     
     forms.forEach(form => {
+        // Skip validation for auth forms (let Django handle it)
+        if (form.classList.contains('auth-form') || form.classList.contains('profile-form')) {
+            return;
+        }
+        
         form.addEventListener('submit', function(event) {
             const requiredFields = form.querySelectorAll('[required]');
             let isValid = true;
@@ -178,16 +183,19 @@ function initializeButtonLoading() {
     const submitButtons = document.querySelectorAll('button[type="submit"]');
     
     submitButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            if (this.form && this.form.checkValidity()) {
-                this.disabled = true;
-                this.innerHTML = '<span class="loading-spinner"></span> Processing...';
+        button.form?.addEventListener('submit', function(e) {
+            // Only disable and show loading for valid forms
+            if (!e.defaultPrevented) {
+                button.disabled = true;
+                const originalText = button.innerHTML;
+                button.setAttribute('data-original-text', originalText);
+                button.innerHTML = '<span class="loading-spinner"></span> Processing...';
                 
-                // Re-enable button after form submission (in case of errors)
+                // Re-enable button after timeout (in case of errors)
                 setTimeout(() => {
-                    this.disabled = false;
-                    this.innerHTML = this.getAttribute('data-original-text') || 'Submit';
-                }, 5000);
+                    button.disabled = false;
+                    button.innerHTML = originalText;
+                }, 10000);
             }
         });
     });

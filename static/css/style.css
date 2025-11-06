@@ -522,14 +522,27 @@ p {
     margin-bottom: 1rem;
 }
 
-.feature-card h3 {
-    color: #1e293b;
-    margin-bottom: 1rem;
+/* Make feature cards clickable and highlight on hover */
+.feature-card {
+    background: #1e293b;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(30, 41, 59, 0.08);
+    text-align: center;
+    transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+    margin-bottom: 2rem;
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+    display: block;
 }
 
-.how-it-works {
-    padding: 4rem 2rem;
-    background: #f8fafc;
+.feature-card:hover, .feature-card:focus {
+    box-shadow: 0 4px 16px rgba(30, 41, 59, 0.18);
+    transform: translateY(-4px) scale(1.03);
+    background: #334155;
+    color: #fff;
+    text-decoration: none;
 }
 
 .how-it-works h2 {
@@ -1426,6 +1439,111 @@ p {
     margin: 0 auto;
 }
 
+/* AI-Generated Content Styling */
+.type-badge, .level-badge {
+    background: #3b82f6;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.level-badge {
+    background: #8b5cf6;
+}
+
+.questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.question-details {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.question-details h4 {
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.key-points {
+    list-style: none;
+    padding: 0;
+}
+
+.key-points li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.key-points li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #10b981;
+    font-weight: bold;
+}
+
+.answer-guide {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.roadmap-config {
+    margin-bottom: 2rem;
+}
+
+.config-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.config-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.roadmap-topics, .roadmap-projects {
+    margin: 1rem 0;
+}
+
+.topic-list, .project-list {
+    list-style: none;
+    padding: 0;
+}
+
+.topic-list li, .project-list li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #475569;
+}
+
+.topic-list li:before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #3b82f6;
+}
+
+.project-list li:before {
+    content: "📋";
+    position: absolute;
+    left: 0;
+}
+
 /* Responsive adjustments for app pages */
 @media (max-width: 768px) {
     .interview-content {
@@ -1461,6 +1579,10 @@ p {
     }
     
     .interview-types {
+        grid-template-columns: 1fr;
+    }
+    
+    .config-form .form-row {
         grid-template-columns: 1fr;
     }
 }

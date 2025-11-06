@@ -19,6 +19,9 @@ def register(request):
             login(request, user)
             messages.success(request, 'Account created successfully! Welcome to AI Interview Coach.')
             return redirect('dashboard')
+        else:
+            # If form is invalid, errors will be shown in the template
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = UserRegisterForm()
     return render(request, 'register.html', {'form': form})
@@ -53,8 +56,18 @@ def profile(request):
     else:
         form = ProfileUpdateForm(instance=profile)
     
+    # Calculate profile completion percentage
+    completion = 40  # Base for having an account
+    if profile.job_role:
+        completion += 20
+    if profile.experience_years > 0:
+        completion += 20
+    if profile.resume:
+        completion += 20
+    
     context = {
         'form': form,
         'profile': profile,
+        'completion_percentage': completion,
     }
     return render(request, 'profile.html', context)

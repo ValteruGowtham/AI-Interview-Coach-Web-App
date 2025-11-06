@@ -4,90 +4,505 @@
 {% block title %}Interview Practice - AI Interview Coach{% endblock %}
 
 {% block content %}
-<div class="interview-container">
-    <div class="page-header">
-        <h1>Interview Practice</h1>
-        <p class="page-subtitle">Master your interview skills with AI-powered mock interviews</p>
-    </div>
-
-    <div class="interview-features">
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>Role-Based Practice</h3>
-                <p>Practice interviews tailored to your target role and industry</p>
+<div class="interview-page">
+    <!-- Hero Section -->
+    <div class="interview-hero">
+        <div class="hero-container">
+            <div class="hero-badge">
+                <span class="badge-icon">🎤</span>
+                <span>AI-Powered Practice</span>
             </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">🤖</div>
-                <h3>AI-Powered Feedback</h3>
-                <p>Get instant feedback on your responses and communication style</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Performance Analytics</h3>
-                <p>Track your progress and identify areas for improvement</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">⏱️</div>
-                <h3>Flexible Timing</h3>
-                <p>Practice at your own pace with customizable session lengths</p>
-            </div>
+            <h1 class="hero-title">Interview Practice</h1>
+            <p class="hero-subtitle">Master your interview skills with personalized AI coaching and real-time feedback</p>
+            <a href="{% url 'interview:simulate' %}" class="hero-button">
+                <span>Start Practice Now</span>
+                <span class="button-icon">→</span>
+            </a>
         </div>
     </div>
 
-    <div class="interview-actions">
-        <div class="action-section">
-            <h2>Ready to Practice?</h2>
-            <p>Choose your interview type and start practicing with our AI interviewer</p>
+    <!-- Main Content -->
+    <div class="interview-main">
+        <!-- Features Grid -->
+        <div class="features-section">
+            <div class="section-header">
+                <h2 class="section-title">Why Practice With Us?</h2>
+                <p class="section-subtitle">Everything you need to ace your next interview</p>
+            </div>
             
-            <div class="interview-types">
-                <div class="interview-type-card">
-                    <h3>Technical Interview</h3>
-                    <p>Practice coding problems and technical questions</p>
-                    <a href="{% url 'interview:simulate' %}" class="btn btn-primary">Start Technical</a>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon-box purple">
+                        <span>🎯</span>
+                    </div>
+                    <h3 class="feature-title">Role-Based Practice</h3>
+                    <p class="feature-text">Practice interviews tailored to your target role, industry, and experience level</p>
                 </div>
-                
-                <div class="interview-type-card">
-                    <h3>Behavioral Interview</h3>
-                    <p>Practice common behavioral and situational questions</p>
-                    <a href="{% url 'interview:simulate' %}" class="btn btn-secondary">Start Behavioral</a>
+
+                <div class="feature-card">
+                    <div class="feature-icon-box blue">
+                        <span>🤖</span>
+                    </div>
+                    <h3 class="feature-title">AI-Powered Feedback</h3>
+                    <p class="feature-text">Get instant, intelligent feedback on your responses and communication style</p>
                 </div>
-                
-                <div class="interview-type-card">
-                    <h3>System Design</h3>
-                    <p>Practice system design and architecture questions</p>
-                    <a href="{% url 'interview:simulate' %}" class="btn btn-outline">Start System Design</a>
+
+                <div class="feature-card">
+                    <div class="feature-icon-box green">
+                        <span>📊</span>
+                    </div>
+                    <h3 class="feature-title">Performance Analytics</h3>
+                    <p class="feature-text">Track your progress over time and identify areas for improvement</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-box orange">
+                        <span>⏱️</span>
+                    </div>
+                    <h3 class="feature-title">Flexible Timing</h3>
+                    <p class="feature-text">Practice at your own pace with customizable session lengths and difficulty</p>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="interview-tips">
-        <h2>Interview Tips</h2>
-        <div class="tips-grid">
-            <div class="tip-card">
-                <h4>Prepare Your Stories</h4>
-                <p>Have 2-3 specific examples ready for common behavioral questions</p>
+        <!-- Interview Types -->
+        <div class="types-section">
+            <div class="section-header">
+                <h2 class="section-title">Choose Your Interview Type</h2>
+                <p class="section-subtitle">Select the type of interview you want to practice</p>
             </div>
-            
-            <div class="tip-card">
-                <h4>Practice Out Loud</h4>
-                <p>Speaking your answers helps you organize your thoughts better</p>
+
+            <div class="types-grid">
+                <a href="{% url 'interview:simulate' %}" class="type-card card-purple">
+                    <div class="type-icon">💻</div>
+                    <h3 class="type-title">Technical Interview</h3>
+                    <p class="type-description">Practice coding problems, algorithms, and technical questions for software engineering roles</p>
+                    <div class="type-footer">
+                        <span class="type-badge">Popular</span>
+                        <span class="type-arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="{% url 'interview:simulate' %}" class="type-card card-blue">
+                    <div class="type-icon">💬</div>
+                    <h3 class="type-title">Behavioral Interview</h3>
+                    <p class="type-description">Practice common behavioral questions and demonstrate your soft skills and experience</p>
+                    <div class="type-footer">
+                        <span class="type-badge">Recommended</span>
+                        <span class="type-arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="{% url 'interview:simulate' %}" class="type-card card-green">
+                    <div class="type-icon">🏗️</div>
+                    <h3 class="type-title">System Design</h3>
+                    <p class="type-description">Practice designing scalable systems and discussing architecture decisions</p>
+                    <div class="type-footer">
+                        <span class="type-badge">Advanced</span>
+                        <span class="type-arrow">→</span>
+                    </div>
+                </a>
             </div>
-            
-            <div class="tip-card">
-                <h4>Research the Company</h4>
-                <p>Understand the company's culture, values, and recent news</p>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="tips-section">
+            <div class="tips-header">
+                <h2 class="tips-title">Pro Interview Tips</h2>
+                <p class="tips-subtitle">Expert advice to help you succeed</p>
             </div>
-            
-            <div class="tip-card">
-                <h4>Ask Questions</h4>
-                <p>Prepare thoughtful questions to ask your interviewer</p>
+
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-number">01</div>
+                    <div class="tip-content">
+                        <h3 class="tip-title">Prepare Your Stories</h3>
+                        <p class="tip-text">Have 2-3 specific STAR method examples ready for common behavioral questions to demonstrate your skills.</p>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">02</div>
+                    <div class="tip-content">
+                        <h3 class="tip-title">Practice Out Loud</h3>
+                        <p class="tip-text">Speaking your answers helps organize thoughts and improves clarity. Record yourself to identify areas for improvement.</p>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">03</div>
+                    <div class="tip-content">
+                        <h3 class="tip-title">Research the Company</h3>
+                        <p class="tip-text">Understand the company's culture, values, products, and recent news to show genuine interest.</p>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">04</div>
+                    <div class="tip-content">
+                        <h3 class="tip-title">Ask Smart Questions</h3>
+                        <p class="tip-text">Prepare 3-5 thoughtful questions about the role, team, and company to show engagement and interest.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+/* Interview Page Styles */
+.interview-page {
+    min-height: calc(100vh - 80px);
+    background: #f8fafc;
+}
+
+.interview-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.hero-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.badge-icon {
+    font-size: 1.25rem;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+    font-size: 1.15rem;
+    opacity: 0.95;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: white;
+    color: #667eea;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: all 0.2s;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hero-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.button-icon {
+    font-size: 1.25rem;
+}
+
+.interview-main {
+    max-width: 1400px;
+    margin: -3rem auto 0;
+    padding: 0 2rem 3rem;
+}
+
+/* Features Section */
+.features-section {
+    margin-bottom: 4rem;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+}
+
+.feature-icon-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.feature-icon-box.purple {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.feature-icon-box.blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.feature-icon-box.green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.feature-icon-box.orange {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+}
+
+.feature-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.feature-text {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Interview Types Section */
+.types-section {
+    margin-bottom: 4rem;
+}
+
+.types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.type-card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.type-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.type-card.card-purple::before {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.type-card.card-blue::before {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.type-card.card-green::before {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.type-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.type-card:hover::before {
+    opacity: 1;
+}
+
+.type-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.type-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+.type-description {
+    font-size: 1rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.type-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.type-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.375rem 0.75rem;
+    border-radius: 50px;
+    background: #f1f5f9;
+    color: #667eea;
+}
+
+.type-arrow {
+    font-size: 1.5rem;
+    color: #cbd5e1;
+    transition: all 0.3s;
+}
+
+.type-card:hover .type-arrow {
+    color: #667eea;
+    transform: translateX(5px);
+}
+
+/* Tips Section */
+.tips-section {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 3rem 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.tips-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.tips-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.tips-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.tip-card {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 1rem;
+    transition: all 0.2s;
+}
+
+.tip-card:hover {
+    background: #f1f5f9;
+    transform: translateX(4px);
+}
+
+.tip-number {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.tip-content {
+    flex: 1;
+}
+
+.tip-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.tip-text {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .features-grid,
+    .types-grid,
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 {% endblock %}

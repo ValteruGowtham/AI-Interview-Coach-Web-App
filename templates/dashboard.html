@@ -4,97 +4,642 @@
 {% block title %}Dashboard - AI Interview Coach{% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-    <div class="welcome-section">
-        <h1>Welcome, {{ user.username }}!</h1>
-        <p class="welcome-subtitle">Ready to ace your next interview? Let's get started!</p>
-    </div>
-
-    <div class="quick-actions">
-        <h2>Quick Actions</h2>
-        <div class="action-cards">
-            <div class="action-card">
-                <div class="card-icon">📝</div>
-                <h3>Resume Analysis</h3>
-                <p>Upload and analyze your resume with AI insights</p>
-                <a href="{% url 'resume:home' %}" class="btn btn-secondary">Get Started</a>
+<div class="dashboard-page">
+    <!-- Hero Section -->
+    <div class="dashboard-hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="greeting-badge">
+                    <span class="badge-icon">👋</span>
+                    <span>Welcome Back</span>
+                </div>
+                <h1 class="hero-title">Hey, {{ user.username }}!</h1>
+                <p class="hero-subtitle">{% if profile.job_role %}Preparing for {{ profile.job_role }} role{% else %}Ready to ace your next interview?{% endif %}</p>
             </div>
-            
-            <div class="action-card">
-                <div class="card-icon">🎯</div>
-                <h3>Interview Practice</h3>
-                <p>Practice with AI-powered mock interviews</p>
-                <a href="{% url 'interview:home' %}" class="btn btn-secondary">Start Practice</a>
-            </div>
-            
-            <div class="action-card">
-                <div class="card-icon">🗺️</div>
-                <h3>Learning Roadmap</h3>
-                <p>Follow personalized learning paths</p>
-                <a href="{% url 'roadmap:home' %}" class="btn btn-secondary">View Roadmap</a>
+            <div class="hero-stats">
+                <div class="stat-box">
+                    <div class="stat-number">{{ profile.experience_years|default:0 }}</div>
+                    <div class="stat-label">Years Exp</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">{% if profile.resume %}1{% else %}0{% endif %}</div>
+                    <div class="stat-label">Resume</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">{{ user.date_joined|timesince|slice:":1" }}</div>
+                    <div class="stat-label">Days Active</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="progress-section">
-        <h2>Your Progress</h2>
-        <div class="progress-cards">
-            <div class="progress-card">
-                <h4>Resume Score</h4>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 75%"></div>
-                </div>
-                <span class="progress-text">75%</span>
-            </div>
-            
-            <div class="progress-card">
-                <h4>Interview Skills</h4>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 60%"></div>
-                </div>
-                <span class="progress-text">60%</span>
-            </div>
-            
-            <div class="progress-card">
-                <h4>Learning Progress</h4>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 45%"></div>
-                </div>
-                <span class="progress-text">45%</span>
-            </div>
-        </div>
-    </div>
+    <!-- Main Content -->
+    <div class="dashboard-main">
+        <div class="dashboard-grid">
+            <!-- Left Column -->
+            <div class="main-column">
+                <!-- Quick Actions -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2 class="section-title">Quick Actions</h2>
+                        <p class="section-subtitle">Jump into your preparation journey</p>
+                    </div>
+                    
+                    <div class="action-grid">
+                        <a href="{% url 'interview:simulate' %}" class="action-item">
+                            <div class="action-icon-box purple">
+                                <span class="action-icon">🎤</span>
+                            </div>
+                            <div class="action-content">
+                                <h3>Start Interview</h3>
+                                <p>Practice with AI questions</p>
+                            </div>
+                            <div class="action-arrow">→</div>
+                        </a>
 
-    <div class="recent-activity">
-        <h2>Recent Activity</h2>
-        <div class="activity-list">
-            <div class="activity-item">
-                <span class="activity-icon">📊</span>
-                <div class="activity-content">
-                    <h4>Resume Analysis Completed</h4>
-                    <p>Your resume was analyzed and scored 75/100</p>
-                    <span class="activity-time">2 hours ago</span>
+                        <a href="{% url 'roadmap:home' %}" class="action-item">
+                            <div class="action-icon-box blue">
+                                <span class="action-icon">🗺️</span>
+                            </div>
+                            <div class="action-content">
+                                <h3>Learning Path</h3>
+                                <p>Get personalized roadmap</p>
+                            </div>
+                            <div class="action-arrow">→</div>
+                        </a>
+
+                        <a href="{% url 'resume:home' %}" class="action-item">
+                            <div class="action-icon-box green">
+                                <span class="action-icon">📄</span>
+                            </div>
+                            <div class="action-content">
+                                <h3>Resume Review</h3>
+                                <p>Analyze your resume</p>
+                            </div>
+                            <div class="action-arrow">→</div>
+                        </a>
+
+                        <a href="{% url 'profile' %}" class="action-item">
+                            <div class="action-icon-box orange">
+                                <span class="action-icon">⚙️</span>
+                            </div>
+                            <div class="action-content">
+                                <h3>Profile Settings</h3>
+                                <p>Update your information</p>
+                            </div>
+                            <div class="action-arrow">→</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="features-section">
+                    <h2 class="section-title">Explore Features</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-header">
+                                <span class="feature-icon">🎯</span>
+                                <h3>Mock Interviews</h3>
+                            </div>
+                            <p>Practice with AI-generated questions tailored to your target role and experience level.</p>
+                            <a href="{% url 'interview:home' %}" class="feature-link">
+                                <span>Explore</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-header">
+                                <span class="feature-icon">📚</span>
+                                <h3>Learning Roadmaps</h3>
+                            </div>
+                            <p>Get structured learning paths with resources and projects for your career goals.</p>
+                            <a href="{% url 'roadmap:home' %}" class="feature-link">
+                                <span>Explore</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-header">
+                                <span class="feature-icon">✨</span>
+                                <h3>AI-Powered Feedback</h3>
+                            </div>
+                            <p>Receive intelligent insights on your resume and interview performance.</p>
+                            <a href="{% url 'resume:home' %}" class="feature-link">
+                                <span>Explore</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="activity-item">
-                <span class="activity-icon">🎤</span>
-                <div class="activity-content">
-                    <h4>Mock Interview Completed</h4>
-                    <p>Completed a 15-minute technical interview session</p>
-                    <span class="activity-time">1 day ago</span>
+
+            <!-- Right Column (Sidebar) -->
+            <div class="sidebar-column">
+                <!-- Profile Card -->
+                <div class="profile-sidebar-card">
+                    <div class="profile-avatar">
+                        <div class="avatar-circle">
+                            <span class="avatar-text">{{ user.username|slice:":2"|upper }}</span>
+                        </div>
+                    </div>
+                    <h3 class="profile-name">{{ user.get_full_name|default:user.username }}</h3>
+                    <p class="profile-email">{{ user.email }}</p>
+                    <p class="profile-role">{{ profile.job_role|default:"Set your target role" }}</p>
+                    <a href="{% url 'profile' %}" class="profile-edit-btn">
+                        <span>Edit Profile</span>
+                        <span>→</span>
+                    </a>
                 </div>
-            </div>
-            
-            <div class="activity-item">
-                <span class="activity-icon">📚</span>
-                <div class="activity-content">
-                    <h4>Learning Module Started</h4>
-                    <p>Started "Advanced Data Structures" module</p>
-                    <span class="activity-time">3 days ago</span>
+
+                <!-- Tips Card -->
+                <div class="tips-card">
+                    <div class="tips-header">
+                        <span class="tips-icon">💡</span>
+                        <h3>Pro Tips</h3>
+                    </div>
+                    <div class="tips-list">
+                        <div class="tip-item">
+                            <span class="tip-bullet">•</span>
+                            <p>Practice at least 3 interviews per week for best results</p>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-bullet">•</span>
+                            <p>Update your resume every 3 months with new achievements</p>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-bullet">•</span>
+                            <p>Follow your learning roadmap consistently for skill growth</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="quick-links-card">
+                    <h3 class="card-title">Quick Links</h3>
+                    <div class="links-list">
+                        <a href="{% url 'interview:home' %}" class="quick-link">
+                            <span class="link-icon">🎤</span>
+                            <span>Interview Practice</span>
+                        </a>
+                        <a href="{% url 'roadmap:home' %}" class="quick-link">
+                            <span class="link-icon">🗺️</span>
+                            <span>Learning Roadmap</span>
+                        </a>
+                        <a href="{% url 'resume:home' %}" class="quick-link">
+                            <span class="link-icon">📄</span>
+                            <span>Resume Analysis</span>
+                        </a>
+                        <a href="{% url 'profile' %}" class="quick-link">
+                            <span class="link-icon">👤</span>
+                            <span>Profile Settings</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+/* Dashboard Page Styles */
+.dashboard-page {
+    min-height: calc(100vh - 80px);
+    background: #f8fafc;
+}
+
+.dashboard-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem 2rem;
+}
+
+.hero-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.greeting-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.95;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.stat-box {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.dashboard-main {
+    max-width: 1400px;
+    margin: -2rem auto 0;
+    padding: 0 2rem 3rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+}
+
+.section-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.action-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 1rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.action-item:hover {
+    background: white;
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.action-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.action-icon-box.purple {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.action-icon-box.blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.action-icon-box.green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.action-icon-box.orange {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+}
+
+.action-icon {
+    font-size: 1.5rem;
+}
+
+.action-content {
+    flex: 1;
+}
+
+.action-content h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.action-content p {
+    font-size: 0.8125rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.action-arrow {
+    color: #94a3b8;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.features-section {
+    margin-bottom: 2rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+}
+
+.feature-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.feature-icon {
+    font-size: 1.75rem;
+}
+
+.feature-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.feature-card p {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.feature-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #667eea;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: gap 0.2s;
+}
+
+.feature-link:hover {
+    gap: 0.75rem;
+}
+
+/* Sidebar */
+.sidebar-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.profile-sidebar-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.profile-avatar {
+    margin-bottom: 1rem;
+}
+
+.avatar-circle {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border: 4px solid #f8fafc;
+}
+
+.avatar-text {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: white;
+}
+
+.profile-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.profile-email {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+}
+
+.profile-role {
+    font-size: 0.9rem;
+    color: #667eea;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.profile-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #f8fafc;
+    color: #475569;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.profile-edit-btn:hover {
+    background: #667eea;
+    color: white;
+}
+
+.tips-card,
+.quick-links-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.tips-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.tips-icon {
+    font-size: 1.5rem;
+}
+
+.tips-header h3,
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tip-item {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.tip-bullet {
+    color: #667eea;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.tip-item p {
+    font-size: 0.875rem;
+    color: #475569;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.links-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.quick-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: #475569;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.quick-link:hover {
+    background: #667eea;
+    color: white;
+}
+
+.link-icon {
+    font-size: 1.25rem;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar-column {
+        order: -1;
+    }
+    
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-container {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-stats {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+</style>
 {% endblock %}

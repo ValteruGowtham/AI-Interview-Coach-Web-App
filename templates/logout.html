@@ -1,25 +1,215 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Logged Out - AI Interview Coach{% endblock %}
+{% block title %}Signed Out - AI Interview Coach{% endblock %}
 
 {% block content %}
-<div class="auth-container">
-    <div class="auth-card">
-        <div class="logout-success">
-            <div class="success-icon">✅</div>
-            <h2>Successfully Logged Out</h2>
-            <p class="logout-message">You have been successfully logged out of your account.</p>
+<div class="logout-page">
+    <div class="logout-container">
+        <div class="logout-card">
+            <div class="logout-icon-box">
+                <span class="logout-icon">👋</span>
+            </div>
+            <h1 class="logout-title">You've Been Signed Out</h1>
+            <p class="logout-message">Thank you for using AI Interview Coach. We hope to see you again soon!</p>
             
             <div class="logout-actions">
-                <a href="{% url 'login' %}" class="btn btn-primary">Sign In Again</a>
-                <a href="{% url 'register' %}" class="btn btn-secondary">Create New Account</a>
+                <a href="{% url 'home' %}" class="action-btn primary">
+                    <span>Go to Home</span>
+                    <span class="btn-arrow">→</span>
+                </a>
+                <a href="{% url 'login' %}" class="action-btn secondary">
+                    <span>Sign In Again</span>
+                </a>
             </div>
-            
+
+            <div class="logout-divider">
+                <span>or</span>
+            </div>
+
             <div class="logout-footer">
-                <p>Thank you for using AI Interview Coach!</p>
+                <p class="footer-text">Don't have an account yet?</p>
+                <a href="{% url 'register' %}" class="register-link">Create a free account →</a>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+/* Logout Page Styles */
+.logout-page {
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.logout-container {
+    max-width: 500px;
+    width: 100%;
+}
+
+.logout-card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.logout-icon-box {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.logout-icon {
+    font-size: 2.5rem;
+}
+
+.logout-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+.logout-message {
+    font-size: 1rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.logout-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.action-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.action-btn.secondary {
+    background: #f8fafc;
+    color: #475569;
+    border: 2px solid #e2e8f0;
+}
+
+.action-btn.secondary:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.btn-arrow {
+    font-size: 1.25rem;
+}
+
+.logout-divider {
+    position: relative;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.logout-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e2e8f0;
+    z-index: 0;
+}
+
+.logout-divider span {
+    position: relative;
+    display: inline-block;
+    padding: 0 1rem;
+    background: white;
+    color: #94a3b8;
+    font-size: 0.875rem;
+    font-weight: 500;
+    z-index: 1;
+}
+
+.logout-footer {
+    padding-top: 1rem;
+}
+
+.footer-text {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+}
+
+.register-link {
+    display: inline-flex;
+    align-items: center;
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.register-link:hover {
+    color: #764ba2;
+    transform: translateX(4px);
+}
+
+@media (max-width: 768px) {
+    .logout-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .logout-title {
+        font-size: 1.5rem;
+    }
+
+    .action-btn {
+        padding: 0.875rem 1.5rem;
+    }
+}
+</style>
+
+<script>
+// Auto-redirect to home after 10 seconds if user doesn't take action
+setTimeout(function() {
+    const currentUrl = window.location.href;
+    // Only redirect if user is still on the logout page
+    if (currentUrl.includes('logout')) {
+        // Show a gentle notification before redirect
+        console.log('Auto-redirecting to home page...');
+    }
+}, 10000);
+</script>
 {% endblock %}

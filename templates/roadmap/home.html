@@ -4,112 +4,936 @@
 {% block title %}Learning Roadmap - AI Interview Coach{% endblock %}
 
 {% block content %}
-<div class="roadmap-container">
-    <div class="page-header">
-        <h1>Learning Roadmap</h1>
-        <p class="page-subtitle">Follow personalized learning paths to master the skills you need for your dream job</p>
-    </div>
-
-    <div class="roadmap-overview">
-        <div class="overview-card">
-            <h2>Your Learning Journey</h2>
-            <p>Track your progress through structured learning modules designed for your career goals</p>
-            <div class="progress-summary">
-                <div class="progress-item">
-                    <span class="progress-label">Completed Modules</span>
-                    <span class="progress-value">0/{{ roadmap|length }}</span>
-                </div>
-                <div class="progress-item">
-                    <span class="progress-label">Total Weeks</span>
-                    <span class="progress-value">{{ roadmap|length }} weeks</span>
-                </div>
+<div class="roadmap-page">
+    <!-- Hero Section -->
+    <div class="roadmap-hero">
+        <div class="hero-wrapper">
+            <div class="hero-badge">
+                <span class="badge-icon">🚀</span>
+                <span>AI-Powered Learning Path</span>
             </div>
+            <h1 class="hero-title">Your Personalized Career Roadmap</h1>
+            <p class="hero-subtitle">Get a structured learning path tailored to your goals, powered by AI</p>
         </div>
     </div>
 
-    <div class="roadmap-content">
-        <h2>Learning Path</h2>
-        <div class="roadmap-timeline">
-            {% for item in roadmap %}
-            <div class="roadmap-item">
-                <div class="roadmap-marker">
-                    <div class="marker-number">{{ forloop.counter }}</div>
-                </div>
-                <div class="roadmap-content">
-                    <div class="roadmap-header">
-                        <h3>{{ item.title }}</h3>
-                        <span class="duration">{{ item.weeks }} weeks</span>
+    <!-- Configuration Section -->
+    <div class="config-section">
+        <div class="config-wrapper">
+            <div class="config-card">
+                <div class="config-header">
+                    <div class="config-icon">⚙️</div>
+                    <div>
+                        <h2>Customize Your Path</h2>
+                        <p>Tell us your target role and we'll create a personalized roadmap</p>
                     </div>
-                    <div class="roadmap-resources">
-                        <h4>Resources:</h4>
-                        <div class="resource-tags">
-                            {% for resource in item.resources %}
-                            <span class="resource-tag">{{ resource }}</span>
-                            {% endfor %}
+                </div>
+
+                <form method="post" class="config-form" id="roadmap-form">
+                    {% csrf_token %}
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="job_role" class="field-label">
+                                <span class="label-icon">💼</span>
+                                <span>Target Job Role</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                name="job_role" 
+                                id="job_role" 
+                                value="{{ job_role }}" 
+                                placeholder="e.g., Full Stack Developer, Data Scientist"
+                                class="field-input"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="experience_years" class="field-label">
+                                <span class="label-icon">📊</span>
+                                <span>Years of Experience</span>
+                            </label>
+                            <input 
+                                type="number" 
+                                name="experience_years" 
+                                id="experience_years" 
+                                value="{{ request.user.profile.experience_years|default:0 }}"
+                                min="0" 
+                                max="30"
+                                class="field-input"
+                            >
                         </div>
                     </div>
-                    <div class="roadmap-actions">
-                        <button class="btn btn-primary">Start Module</button>
-                        <button class="btn btn-outline">View Details</button>
+
+                    <button type="submit" class="generate-btn" id="generate-btn">
+                        <span class="btn-text">Generate My Roadmap</span>
+                        <span class="btn-icon">✨</span>
+                    </button>
+                    <div class="loading-indicator" id="loading-indicator" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Generating your personalized roadmap with AI...</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State or Roadmap Content -->
+    {% if roadmap %}
+    <div class="roadmap-section">
+        <div class="roadmap-wrapper">
+            <!-- Stats Overview -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ roadmap.modules|length }}</div>
+                        <div class="stat-label">Learning Modules</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ roadmap.modules|length|add:"4" }}-{{ roadmap.modules|length|add:"8" }}</div>
+                        <div class="stat-label">Weeks to Complete</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ job_role }}</div>
+                        <div class="stat-label">Target Role</div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+
+            <!-- Timeline -->
+            <div class="timeline-container">
+                <h2 class="timeline-title">Your Learning Journey</h2>
+                
+                <div class="timeline">
+                    {% for module in roadmap.modules %}
+                    <div class="timeline-item" data-module="{{ forloop.counter }}">
+                        <div class="timeline-marker">
+                            <div class="marker-dot"></div>
+                            <div class="marker-line"></div>
+                        </div>
+
+                        <div class="timeline-content">
+                            <div class="module-header">
+                                <div class="module-number">Module {{ forloop.counter }}</div>
+                                <div class="module-duration">{{ module.timeline }}</div>
+                            </div>
+
+                            <h3 class="module-title">{{ module.title }}</h3>
+
+                            <div class="module-body">
+                                {% if module.topics %}
+                                <div class="module-section topics-section">
+                                    <div class="section-header">
+                                        <span class="section-icon">📖</span>
+                                        <h4>What You'll Learn</h4>
+                                    </div>
+                                    <div class="topics-grid">
+                                        {% for topic in module.topics %}
+                                        <div class="topic-chip">
+                                            <span class="chip-icon">✓</span>
+                                            <span>{{ topic }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if module.resources %}
+                                <div class="module-section resources-section">
+                                    <div class="section-header">
+                                        <span class="section-icon">🔗</span>
+                                        <h4>Recommended Resources</h4>
+                                    </div>
+                                    <div class="resources-list">
+                                        {% for resource in module.resources %}
+                                        <div class="resource-item">
+                                            <span class="resource-icon">📚</span>
+                                            <span class="resource-name">{{ resource }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if module.projects %}
+                                <div class="module-section projects-section">
+                                    <div class="section-header">
+                                        <span class="section-icon">💻</span>
+                                        <h4>Practice Projects</h4>
+                                    </div>
+                                    <div class="projects-list">
+                                        {% for project in module.projects %}
+                                        <div class="project-item">
+                                            <span class="project-bullet">→</span>
+                                            <span class="project-text">{{ project }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="module-footer">
+                                <button class="progress-btn" onclick="toggleComplete({{ forloop.counter }})">
+                                    <span class="check-icon">☐</span>
+                                    <span>Mark as Complete</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Action Card -->
+            <div class="action-card">
+                <div class="action-content">
+                    <div class="action-icon">🎓</div>
+                    <div class="action-text">
+                        <h3>Ready to Start Learning?</h3>
+                        <p>Begin with Module 1 and track your progress as you go</p>
+                    </div>
+                </div>
+                <button class="start-btn" onclick="scrollToTop()">
+                    <span>Customize Roadmap</span>
+                    <span>↑</span>
+                </button>
+            </div>
         </div>
     </div>
-
-    <div class="roadmap-features">
-        <h2>Why Choose Our Roadmap?</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>Personalized Paths</h3>
-                <p>Learning roadmaps tailored to your experience level and career goals</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">📚</div>
-                <h3>Curated Resources</h3>
-                <p>Hand-picked resources from industry experts and top platforms</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">📈</div>
-                <h3>Progress Tracking</h3>
-                <p>Monitor your learning progress with detailed analytics</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">🔄</div>
-                <h3>Adaptive Learning</h3>
-                <p>Roadmaps that adapt based on your performance and feedback</p>
+    {% else %}
+    <!-- Empty State -->
+    <div class="empty-state-section">
+        <div class="empty-state-wrapper">
+            <div class="empty-state-card">
+                <div class="empty-icon">🗺️</div>
+                <h2 class="empty-title">Ready to Start Your Learning Journey?</h2>
+                <p class="empty-text">Fill in the form above and click "Generate My Roadmap" to get your personalized AI-powered learning path.</p>
+                
+                <div class="preview-features">
+                    <div class="preview-item">
+                        <span class="preview-icon">✨</span>
+                        <span>AI-Generated Modules</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-icon">📚</span>
+                        <span>Curated Resources</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-icon">💻</span>
+                        <span>Practice Projects</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-icon">⏱️</span>
+                        <span>Timeline Estimation</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    {% endif %}
 
-    <div class="roadmap-tips">
-        <h2>Learning Tips</h2>
-        <div class="tips-grid">
-            <div class="tip-card">
-                <h4>Set Daily Goals</h4>
-                <p>Commit to spending at least 1-2 hours daily on learning</p>
-            </div>
-            
-            <div class="tip-card">
-                <h4>Practice Regularly</h4>
-                <p>Apply what you learn through hands-on projects and exercises</p>
-            </div>
-            
-            <div class="tip-card">
-                <h4>Join Communities</h4>
-                <p>Connect with others learning similar skills for motivation</p>
-            </div>
-            
-            <div class="tip-card">
-                <h4>Review & Reflect</h4>
-                <p>Regularly review your progress and adjust your learning plan</p>
+    <!-- Tips Section -->
+    <div class="tips-section">
+        <div class="tips-wrapper">
+            <h2 class="tips-title">Success Tips for Your Learning Journey</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">🎯</div>
+                    <h3>Set Clear Goals</h3>
+                    <p>Define what success looks like for each module before you start</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">📅</div>
+                    <h3>Create a Schedule</h3>
+                    <p>Dedicate specific times each day to learning and stick to them</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">💪</div>
+                    <h3>Practice Consistently</h3>
+                    <p>Build projects and solve problems to reinforce what you learn</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">👥</div>
+                    <h3>Join Communities</h3>
+                    <p>Connect with others learning similar skills for support</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+// Show loading indicator on form submit
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('roadmap-form');
+    const btn = document.getElementById('generate-btn');
+    const loader = document.getElementById('loading-indicator');
+    
+    if (form) {
+        form.addEventListener('submit', function() {
+            btn.style.display = 'none';
+            loader.style.display = 'block';
+        });
+    }
+});
+
+function toggleComplete(moduleNum) {
+    const btn = event.target.closest('.progress-btn');
+    const icon = btn.querySelector('.check-icon');
+    const isComplete = icon.textContent === '☑';
+    
+    if (isComplete) {
+        icon.textContent = '☐';
+        btn.style.background = '#f1f5f9';
+        btn.style.color = '#475569';
+        localStorage.removeItem('module-complete-' + moduleNum);
+    } else {
+        icon.textContent = '☑';
+        btn.style.background = '#10b981';
+        btn.style.color = 'white';
+        localStorage.setItem('module-complete-' + moduleNum, 'true');
+    }
+}
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Restore completion status
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.timeline-item').forEach(function(item) {
+        const moduleNum = item.dataset.module;
+        const isComplete = localStorage.getItem('module-complete-' + moduleNum);
+        
+        if (isComplete) {
+            const btn = item.querySelector('.progress-btn');
+            const icon = btn.querySelector('.check-icon');
+            icon.textContent = '☑';
+            btn.style.background = '#10b981';
+            btn.style.color = 'white';
+        }
+    });
+});
+</script>
+
+<style>
+/* Roadmap Page Styles */
+.roadmap-page {
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.roadmap-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.hero-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    opacity: 0.95;
+}
+
+.config-section {
+    padding: 3rem 2rem;
+    background: white;
+}
+
+.config-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.config-card {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.config-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.config-icon {
+    font-size: 2.5rem;
+}
+
+.config-header h2 {
+    font-size: 1.75rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.config-header p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.field-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #334155;
+}
+
+.label-icon {
+    font-size: 1.1rem;
+}
+
+.field-input {
+    padding: 0.875rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.field-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.generate-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.roadmap-section {
+    padding: 3rem 2rem;
+}
+
+.roadmap-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.stat-item {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.stat-icon {
+    font-size: 2rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.stat-label {
+    font-size: 0.8125rem;
+    color: #64748b;
+}
+
+.timeline-title {
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.timeline {
+    position: relative;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.timeline-item:last-child .marker-line {
+    display: none;
+}
+
+.timeline-marker {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.marker-dot {
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 0 0 2px #667eea;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.marker-line {
+    width: 3px;
+    flex: 1;
+    background: linear-gradient(180deg, #667eea 0%, #cbd5e1 100%);
+    min-height: 100px;
+    margin-top: 0.5rem;
+}
+
+.timeline-content {
+    flex: 1;
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.timeline-content:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.module-number {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.375rem 0.875rem;
+    border-radius: 50px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.module-duration {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.375rem 0.875rem;
+    border-radius: 50px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.module-title {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+}
+
+.module-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.module-section {
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.section-icon {
+    font-size: 1.25rem;
+}
+
+.section-header h4 {
+    font-size: 0.95rem;
+    color: #1e293b;
+    margin: 0;
+}
+
+.topics-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.topic-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: white;
+    padding: 0.5rem 0.875rem;
+    border-radius: 50px;
+    font-size: 0.8125rem;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.chip-icon {
+    color: #10b981;
+    font-weight: bold;
+}
+
+.resources-list,
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.resource-item,
+.project-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.resource-icon {
+    flex-shrink: 0;
+}
+
+.project-bullet {
+    color: #667eea;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.module-footer {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.progress-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.progress-btn:hover {
+    background: #e2e8f0;
+}
+
+.check-icon {
+    font-size: 1.1rem;
+}
+
+.action-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    margin-top: 3rem;
+}
+
+.action-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.action-icon {
+    font-size: 3rem;
+}
+
+.action-text h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.action-text p {
+    opacity: 0.9;
+    margin: 0;
+}
+
+.start-btn {
+    background: white;
+    color: #667eea;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.start-btn:hover {
+    transform: scale(1.05);
+}
+
+.tips-section {
+    padding: 3rem 2rem;
+    background: white;
+}
+
+.tips-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tips-title {
+    font-size: 2rem;
+    color: #1e293b;
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+.tip-card {
+    background: #f8fafc;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.tip-card:hover {
+    transform: translateY(-4px);
+}
+
+.tip-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.tip-card h3 {
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.tip-card p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e2e8f0;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-indicator p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Empty State */
+.empty-state-section {
+    padding: 3rem 2rem;
+}
+
+.empty-state-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.empty-state-card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 4rem 2.5rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.empty-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+}
+
+.empty-title {
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.empty-text {
+    font-size: 1.1rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+}
+
+.preview-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.preview-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    font-size: 0.95rem;
+    color: #475569;
+    font-weight: 500;
+}
+
+.preview-icon {
+    font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-bar {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline-item {
+        gap: 1rem;
+    }
+    
+    .action-card {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    
+    .action-content {
+        flex-direction: column;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .preview-features {
+        grid-template-columns: 1fr;
+    }
+}
+}
+</style>
 {% endblock %}
