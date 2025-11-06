@@ -3,3 +3,5 @@ openai
 langchain-community
 langchain
 python-dotenv
+gunicorn
+whitenoise
